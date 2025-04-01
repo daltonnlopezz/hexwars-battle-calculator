@@ -144,107 +144,108 @@
             <option value="Castle">Castle</option>
             <option value="Outpost">Outpost</option>
             <option value="Harbor">Harbor</option>
-        </select </div>
+        </select>
+    </div>
 
-        <button id="calculateBtn" onclick="submitBattle()">Calculate Battle</button>
-        <div id="results"></div>
+    <button id="calculateBtn" onclick="submitBattle()">Calculate Battle</button>
+    <div id="results"></div>
 
-        <script>
-            const unitMap = {
-                "Dominion": ["Ranger", "Sentinel", "Siege Tower", "Corvette", "Galley"],
-                "Raiders": ["Raider", "Hunter", "Ballista", "Maurader", "Bireme"],
-                "HORDE": ["Bearzerker", "Yotes", "Battering Ram", "Warship", "Karve"],
-                "Ironborne": ["Guardian", "Crossbowmen", "Trebuchet", "Ironclad", "Cruiser"],
-                "Vanguard": ["Swordsman", "Knight", "Catapult", "Destroyer", "Frigate"],
-                "Damned": ["Thrall", "Lost Soul", "Harvestor", "Dreadnaught", "Haunter"]
+    <script>
+        const unitMap = {
+            "Dominion": ["Ranger", "Sentinel", "Siege Tower", "Corvette", "Galley"],
+            "Raiders": ["Raider", "Hunter", "Ballista", "Maurader", "Bireme"],
+            "HORDE": ["Bearzerker", "Yotes", "Battering Ram", "Warship", "Karve"],
+            "Ironborne": ["Guardian", "Crossbowmen", "Trebuchet", "Ironclad", "Cruiser"],
+            "Vanguard": ["Swordsman", "Knight", "Catapult", "Destroyer", "Frigate"],
+            "Damned": ["Thrall", "Lost Soul", "Harvestor", "Dreadnaught", "Haunter"]
+        };
+
+        function updateUnitLabels(side) {
+            const faction = document.getElementById(`${side}Faction`).value;
+            const container = document.getElementById(`${side}Units`);
+            const unitTypes = unitMap[faction];
+
+            container.innerHTML = "";
+            unitTypes.forEach(unit => {
+                const row = document.createElement("div");
+                row.classList.add("unit-row");
+
+                const label = document.createElement("label");
+                label.textContent = `${unit}`;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = 0;
+                input.placeholder = `Qty`;
+                input.dataset.unitName = unit;
+
+                row.appendChild(label);
+                row.appendChild(input);
+                container.appendChild(row);
+            });
+        }
+
+        function gatherArmyData(side) {
+            const faction = document.getElementById(`${side}Faction`).value;
+            const inputs = document.getElementById(`${side}Units`).querySelectorAll("input");
+            let army = [faction];
+            inputs.forEach(input => {
+                const unit = input.dataset.unitName;
+                const qty = parseInt(input.value || 0);
+                if (qty > 0) {
+                    army.push(`${unit} x${qty}`);
+                }
+            });
+            console.log(`[${side.toUpperCase()}] Army Data:`, army);
+            return army;
+        }
+
+        async function submitBattle() {
+            const attackers = gatherArmyData("attacker");
+            const defenders = gatherArmyData("defender");
+            const battle_conditions = {
+                attacking_from: document.getElementById("attackingFrom").value,
+                battle_tile: document.getElementById("battleTile").value,
+                attacker_building: document.getElementById("attackerBuilding").value,
+                defender_building: document.getElementById("defenderBuilding").value
             };
 
-            function updateUnitLabels(side) {
-                const faction = document.getElementById(`${side}Faction`).value;
-                const container = document.getElementById(`${side}Units`);
-                const unitTypes = unitMap[faction];
+            console.log("Sending Battle Conditions:", battle_conditions);
 
-                container.innerHTML = "";
-                unitTypes.forEach(unit => {
-                    const row = document.createElement("div");
-                    row.classList.add("unit-row");
+            const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ attackers, defenders, battle_conditions })
+            });
 
-                    const label = document.createElement("label");
-                    label.textContent = `${unit}`;
+            const data = await response.json();
 
-                    const input = document.createElement("input");
-                    input.type = "number";
-                    input.min = 0;
-                    input.placeholder = `Qty`;
-                    input.dataset.unitName = unit;
+            let resultsText = `⚔️ Battle Result ⚔️\n`;
+            resultsText += `Winner: ${data.battle_result.Winner}\n`;
+            resultsText += `Attacker Power: ${data.attacker_combat_power}\n`;
+            resultsText += `Defender Power: ${data.defender_combat_power}\n`;
+            resultsText += `Power Difference: ${(data.battle_result["Power Difference %"] * 100).toFixed(0)}%\n\n`;
 
-                    row.appendChild(label);
-                    row.appendChild(input);
-                    container.appendChild(row);
-                });
+            resultsText += `💥 Attacker Losses:\n`;
+            for (const [unit, qty] of Object.entries(data.attacker_lost_units)) {
+                resultsText += `- ${qty}x ${unit}\n`;
             }
 
-            function gatherArmyData(side) {
-                const faction = document.getElementById(`${side}Faction`).value;
-                const inputs = document.getElementById(`${side}Units`).querySelectorAll("input");
-                let army = [faction];
-                inputs.forEach(input => {
-                    const unit = input.dataset.unitName;
-                    const qty = parseInt(input.value || 0);
-                    if (qty > 0) {
-                        army.push(`${unit} x${qty}`);
-                    }
-                });
-                console.log(`[${side.toUpperCase()}] Army Data:`, army);
-                return army;
+            resultsText += `\n🛡️ Defender Losses:\n`;
+            for (const [unit, qty] of Object.entries(data.defender_lost_units)) {
+                resultsText += `- ${qty}x ${unit}\n`;
             }
 
-            async function submitBattle() {
-                const attackers = gatherArmyData("attacker");
-                const defenders = gatherArmyData("defender");
-                const battle_conditions = {
-                    attacking_from: document.getElementById("attackingFrom").value,
-                    battle_tile: document.getElementById("battleTile").value,
-                    attacker_building: document.getElementById("attackerBuilding").value,
-                    defender_building: document.getElementById("defenderBuilding").value
-                };
+            document.getElementById("results").textContent = resultsText;
+        }
 
-                console.log("Sending Battle Conditions:", battle_conditions);
-
-                const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
-                    method: "POST",
-                    mode: "cors",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
-                    },
-                    body: JSON.stringify({ attackers, defenders, battle_conditions })
-                });
-
-                const data = await response.json();
-
-                let resultsText = `⚔️ Battle Result ⚔️\n`;
-                resultsText += `Winner: ${data.battle_result.Winner}\n`;
-                resultsText += `Attacker Power: ${data.attacker_combat_power}\n`;
-                resultsText += `Defender Power: ${data.defender_combat_power}\n`;
-                resultsText += `Power Difference: ${(data.battle_result["Power Difference %"] * 100).toFixed(0)}%\n\n`;
-
-                resultsText += `💥 Attacker Losses:\n`;
-                for (const [unit, qty] of Object.entries(data.attacker_lost_units)) {
-                    resultsText += `- ${qty}x ${unit}\n`;
-                }
-
-                resultsText += `\n🛡️ Defender Losses:\n`;
-                for (const [unit, qty] of Object.entries(data.defender_lost_units)) {
-                    resultsText += `- ${qty}x ${unit}\n`;
-                }
-
-                document.getElementById("results").textContent = resultsText;
-            }
-
-            updateUnitLabels('attacker');
-            updateUnitLabels('defender');
-        </script>
+        updateUnitLabels('attacker');
+        updateUnitLabels('defender');
+    </script>
 </body>
 
 </html>
