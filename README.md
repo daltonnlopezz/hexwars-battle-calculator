@@ -1,1 +1,0 @@
-# hexwars-battle-calculator
