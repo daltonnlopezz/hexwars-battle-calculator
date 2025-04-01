@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEX Wars Battle Calculator</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 40px;
+        }
+
+        .section-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+
+        .attacker-header {
+            color: #ff4d4d;
+        }
+
+        .defender-header {
+            color: #66ff66;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 250px;
+            padding: 4px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        input[type="number"] {
+            width: 60px;
+            padding: 4px;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+
+        .unit-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .battle-conditions {
+            margin-top: 40px;
+        }
+
+        #calculateBtn {
+            margin-top: 30px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #results {
+            margin-top: 30px;
+            white-space: pre-wrap;
+            background-color: #222;
+            padding: 15px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>HEX WARS BATTLE CALCULATOR</h1>
+
+    <div class="section-header attacker-header">Attacker</div>
+    <label for="attackerFaction">Faction:</label>
+    <select id="attackerFaction" onchange="updateUnitLabels('attacker')">
+        <option value="Dominion">Dominion</option>
+        <option value="Raiders">Raiders</option>
+        <option value="HORDE">HORDE</option>
+        <option value="Ironborne">Ironborne</option>
+        <option value="Vanguard">Vanguard</option>
+        <option value="Damned">Damned</option>
+    </select>
+
+    <div id="attackerUnits"></div>
+
+    <div class="section-header defender-header">Defender</div>
+    <label for="defenderFaction">Faction:</label>
+    <select id="defenderFaction" onchange="updateUnitLabels('defender')">
+        <option value="Dominion">Dominion</option>
+        <option value="Raiders">Raiders</option>
+        <option value="HORDE">HORDE</option>
+        <option value="Ironborne">Ironborne</option>
+        <option value="Vanguard">Vanguard</option>
+        <option value="Damned">Damned</option>
+    </select>
+
+    <div id="defenderUnits"></div>
+
+    <div class="battle-conditions">
+        <label>Attacking From:</label>
+        <select id="attackingFrom">
+            <option value="Plains">Plains</option>
+            <option value="Forest">Forest</option>
+            <option value="Hills">Hills</option>
+            <option value="Sea">Sea</option>
+        </select>
+
+        <label>Battle Tile:</label>
+        <select id="battleTile">
+            <option value="Plains">Plains</option>
+            <option value="Forest">Forest</option>
+            <option value="Hills">Hills</option>
+            <option value="Sea">Sea</option>
+        </select>
+
+        <label>Building:</label>
+        <select id="building">
+            <option value="None">None</option>
+            <option value="Castle">Castle</option>
+            <option value="Outpost">Outpost</option>
+            <option value="Harbor">Harbor</option>
+        </select>
+    </div>
+
+    <button id="calculateBtn" onclick="submitBattle()">Calculate Battle</button>
+    <div id="results"></div>
+
+    <script>
+        const unitMap = {
+            "Dominion": ["Ranger", "Sentinel", "Siege Tower", "Corvette", "Galley"],
+            "Raiders": ["Raider", "Hunter", "Ballista", "Maurader", "Bireme"],
+            "HORDE": ["Bearzerker", "Yotes", "Battering Ram", "Warship", "Karve"],
+            "Ironborne": ["Guardian", "Crossbowmen", "Trebuchet", "Ironclad", "Cruiser"],
+            "Vanguard": ["Swordsman", "Knight", "Catapult", "Destroyer", "Frigate"],
+            "Damned": ["Thrall", "Lost Soul", "Harvestor", "Dreadnaught", "Haunter"]
+        };
+
+        function updateUnitLabels(side) {
+            const faction = document.getElementById(`${side}Faction`).value;
+            const container = document.getElementById(`${side}Units`);
+            const unitTypes = unitMap[faction];
+
+            container.innerHTML = "";
+            unitTypes.forEach(unit => {
+                const row = document.createElement("div");
+                row.classList.add("unit-row");
+
+                const label = document.createElement("label");
+                label.textContent = `${unit}`;
+
+                const input = document.createElement("input");
+                input.type = "number";
+                input.min = 0;
+                input.placeholder = `Qty`;
+                input.dataset.unitName = unit;
+
+                row.appendChild(label);
+                row.appendChild(input);
+                container.appendChild(row);
+            });
+        }
+
+        function gatherArmyData(side) {
+            const faction = document.getElementById(`${side}Faction`).value;
+            const inputs = document.getElementById(`${side}Units`).querySelectorAll("input");
+            let army = [faction];
+            inputs.forEach(input => {
+                const unit = input.dataset.unitName;
+                const qty = parseInt(input.value || 0);
+                if (qty > 0) {
+                    army.push(`${unit} x${qty}`);
+                }
+            });
+            console.log(`[${side.toUpperCase()}] Army Data:`, army);
+            return army;
+        }
+
+        async function submitBattle() {
+            const attackers = gatherArmyData("attacker");
+            const defenders = gatherArmyData("defender");
+            const battle_conditions = {
+                attacking_from: document.getElementById("attackingFrom").value,
+                battle_tile: document.getElementById("battleTile").value,
+                building: document.getElementById("building").value
+            };
+
+            console.log("Sending Battle Conditions:", battle_conditions);
+
+            const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({ attackers, defenders, battle_conditions })
+            });
+
+            const data = await response.json();
+
+            let resultsText = `⚔️ Battle Result ⚔️\n`;
+            resultsText += `Winner: ${data.battle_result.Winner}\n`;
+            resultsText += `Attacker Power: ${data.attacker_combat_power}\n`;
+            resultsText += `Defender Power: ${data.defender_combat_power}\n`;
+            resultsText += `Power Difference: ${(data.battle_result["Power Difference %"] * 100).toFixed(0)}%\n\n`;
+
+            resultsText += `💥 Attacker Losses:\n`;
+            for (const [unit, qty] of Object.entries(data.attacker_lost_units)) {
+                resultsText += `- ${qty}x ${unit}\n`;
+            }
+
+            resultsText += `\n🛡️ Defender Losses:\n`;
+            for (const [unit, qty] of Object.entries(data.defender_lost_units)) {
+                resultsText += `- ${qty}x ${unit}\n`;
+            }
+
+            document.getElementById("results").textContent = resultsText;
+        }
+
+        updateUnitLabels('attacker');
+        updateUnitLabels('defender');
+    </script>
+</body>
+
+</html>
