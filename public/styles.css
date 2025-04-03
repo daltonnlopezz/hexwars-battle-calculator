@@ -1,0 +1,126 @@
+body {
+    background-color: black;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.logo-container {
+    margin: 10px 0 0 30px;
+}
+
+.logo-image {
+    max-width: 200px;
+    display: block;
+}
+
+h1 {
+    text-align: center;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+}
+
+.section-header {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.attacker-header {
+    color: #ff4d4d;
+}
+
+.defender-header {
+    color: #66ff66;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+select {
+    width: 250px;
+    padding: 4px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+input[type="number"] {
+    width: 60px;
+    padding: 4px;
+    margin-left: 10px;
+    font-size: 14px;
+}
+
+.unit-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.battle-conditions {
+    margin-top: 40px;
+}
+
+#calculateBtn {
+    margin-top: 30px;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#results {
+    margin-top: 30px;
+    white-space: pre-wrap;
+    background-color: #222;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.faction {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+.faction p {
+    font-style: italic;
+    margin-bottom: 10px;
+}
+
+.vanguard {
+    color: royalblue;
+}
+
+.dominion {
+    color: gold;
+}
+
+.horde {
+    color: #33cc33;
+    /* A bright green */
+}
+
+.ironborne {
+    color: #cd7f32;
+    /* Bronze */
+}
+
+.damned {
+    color: #cc66ff;
+    /* Purple */
+}
+
+.raiders {
+    color: #ff4d4d;
+    /* Bright red */
+}
