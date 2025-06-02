@@ -370,9 +370,9 @@
             const defenders = gatherArmyData("defender");
             const supporters = gatherSupporterData();
 
-            console.log("Sending Attackers:", attackers);
-            console.log("Sending Defenders:", defenders);
-            console.log("Sending Supporters:", supporters);
+            console.log("[DEBUG] Sending Attackers:", attackers);
+            console.log("[DEBUG] Sending Defenders:", defenders);
+            console.log("[DEBUG] Sending Supporters:", supporters);
 
             const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
                 method: "POST",
@@ -388,14 +388,30 @@
                 })
             });
 
+            console.log("[DEBUG] Fetch response:", response);
+
             if (!response.ok) {
                 document.getElementById("results").textContent = "❌ Error submitting battle. Try again.";
                 return;
             }
 
             const data = await response.json();
+            console.log("[DEBUG] Parsed JSON response:", data);
+
             const resultsDiv = document.getElementById("results");
             resultsDiv.innerHTML = ''; // Clear previous results
+
+            // Debug: Check for expected keys
+            console.log("[DEBUG] battle_results:", data.battle_results);
+            console.log("[DEBUG] attackers:", data.attackers);
+            console.log("[DEBUG] defenders:", data.defenders);
+            console.log("[DEBUG] special_results:", data.special_results);
+
+            // Defensive: Check if keys exist before rendering
+            if (!data.battle_results || !data.attackers || !data.defenders) {
+                resultsDiv.textContent = "❌ Error: Missing expected data in response. See console for details.";
+                return;
+            }
 
             // Create main results container
             const resultsContainer = document.createElement('div');
