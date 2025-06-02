@@ -368,7 +368,7 @@
         async function submitBattle() {
             const attackers = gatherArmyData("attacker");
             const defenders = gatherArmyData("defender");
-            const supporters = gatherSupporterData();  // ⬅️ This should come before fetch
+            const supporters = gatherSupporterData();
 
             console.log("Sending Attackers:", attackers);
             console.log("Sending Defenders:", defenders);
@@ -394,24 +394,99 @@
             }
 
             const data = await response.json();
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = ''; // Clear previous results
 
-            let resultsText = `⚔️ Battle Result ⚔️\n`;
-            resultsText += `Winner: ${data.battle_result.Winner}\n`;
-            resultsText += `Attacker Power: ${data.attacker_combat_power}\n`;
-            resultsText += `Defender Power: ${data.defender_combat_power}\n`;
-            resultsText += `Power Difference: ${(data.battle_result["Power Difference %"] * 100).toFixed(0)}%\n\n`;
+            // Create main results container
+            const resultsContainer = document.createElement('div');
+            resultsContainer.className = 'battle-results';
+            resultsContainer.style.padding = '20px';
+            resultsContainer.style.backgroundColor = '#1a1a1a';
+            resultsContainer.style.borderRadius = '8px';
+            resultsContainer.style.marginTop = '20px';
 
-            resultsText += `💥 Attacker Losses:\n`;
-            for (const [unit, qty] of Object.entries(data.attacker_lost_units)) {
-                resultsText += `- ${qty}x ${unit}\n`;
+            // Battle Results Section
+            const battleResults = document.createElement('div');
+            battleResults.innerHTML = `
+                <h2 style="color: #ffd700; text-align: center; margin-bottom: 20px;">⚔️ BATTLE RESULTS ⚔️</h2>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="color: ${data.battle_results.winner === 'Attackers' ? '#ff4444' : '#44ff44'}">
+                        ${data.battle_results.winner} Victory!
+                    </h3>
+                    <p>Attacker Power: ${data.battle_results.attacker_power}</p>
+                    <p>Defender Power: ${data.battle_results.defender_power}</p>
+                    <p>Power Difference: ${data.battle_results.power_diff}</p>
+                    <p>Power Difference %: ${data.battle_results.power_diff_percentage}%</p>
+                </div>
+            `;
+
+            // Attackers Section
+            const attackersSection = document.createElement('div');
+            attackersSection.innerHTML = `
+                <h3 style="color: #ff4444; margin-top: 20px;">💥 ATTACKERS 💥</h3>
+                <div style="margin-left: 20px;">
+                    <p>Battle Power: ${data.attackers.battle_power}</p>
+                    <p>Supporters Power: ${data.attackers.supporters_power}</p>
+                    <p>TCP Modifier: ${data.attackers.tcp_modifier}</p>
+                    <p>TCP: ${data.attackers.tcp}</p>
+                    <p>Total Lost Units: ${data.attackers.total_lost_units}</p>
+                    <h4>Remaining Army:</h4>
+                    <ul style="list-style-type: none; padding-left: 20px;">
+                        <li>Basic: ${data.attackers.remaining_army.basic}</li>
+                        <li>Special: ${data.attackers.remaining_army.special}</li>
+                        <li>Siege: ${data.attackers.remaining_army.siege}</li>
+                        <li>Combat Ship: ${data.attackers.remaining_army.combat_ship}</li>
+                        <li>Transport Ship: ${data.attackers.remaining_army.transport_ship}</li>
+                    </ul>
+                </div>
+            `;
+
+            // Defenders Section
+            const defendersSection = document.createElement('div');
+            defendersSection.innerHTML = `
+                <h3 style="color: #44ff44; margin-top: 20px;">🛡️ DEFENDERS 🛡️</h3>
+                <div style="margin-left: 20px;">
+                    <p>Battle Power: ${data.defenders.battle_power}</p>
+                    <p>Supporters Power: ${data.defenders.supporters_power}</p>
+                    <p>TCP Modifier: ${data.defenders.tcp_modifier}</p>
+                    <p>TCP: ${data.defenders.tcp}</p>
+                    <p>Total Lost Units: ${data.defenders.total_lost_units}</p>
+                    <h4>Remaining Army:</h4>
+                    <ul style="list-style-type: none; padding-left: 20px;">
+                        <li>Basic: ${data.defenders.remaining_army.basic}</li>
+                        <li>Special: ${data.defenders.remaining_army.special}</li>
+                        <li>Siege: ${data.defenders.remaining_army.siege}</li>
+                        <li>Combat Ship: ${data.defenders.remaining_army.combat_ship}</li>
+                        <li>Transport Ship: ${data.defenders.remaining_army.transport_ship}</li>
+                    </ul>
+                </div>
+            `;
+
+            // Special Results Section (if applicable)
+            if (data.special_results) {
+                const specialResults = document.createElement('div');
+                specialResults.innerHTML = `
+                    <h3 style="color: #ffd700; margin-top: 20px;">✨ SPECIAL RESULTS ✨</h3>
+                    <div style="margin-left: 20px;">
+                        ${data.special_results.lost_souls ? `<p>Lost Souls Collected: ${data.special_results.lost_souls}</p>` : ''}
+                        ${data.special_results.resources_collected ? `
+                            <h4>Resources Collected:</h4>
+                            <ul style="list-style-type: none; padding-left: 20px;">
+                                <li>Food: ${data.special_results.resources_collected.food}</li>
+                                <li>Gold: ${data.special_results.resources_collected.gold}</li>
+                                <li>Iron: ${data.special_results.resources_collected.iron}</li>
+                            </ul>
+                        ` : ''}
+                    </div>
+                `;
+                resultsContainer.appendChild(specialResults);
             }
 
-            resultsText += `\n🛡️ Defender Losses:\n`;
-            for (const [unit, qty] of Object.entries(data.defender_lost_units)) {
-                resultsText += `- ${qty}x ${unit}\n`;
-            }
-
-            document.getElementById("results").textContent = resultsText;
+            // Append all sections
+            resultsContainer.appendChild(battleResults);
+            resultsContainer.appendChild(attackersSection);
+            resultsContainer.appendChild(defendersSection);
+            resultsDiv.appendChild(resultsContainer);
         }
 
 
