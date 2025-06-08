@@ -30,7 +30,7 @@
     <div class="section-header attacker-header">💥 Attacker 💥</div>
     <label for="attackerFaction">Faction:</label>
     <select id="attackerFaction" onchange="updateUnitLabels('attacker')">
-        <option value="Dominion">Dominion</option>
+        <option value="Empire">Empire</option>
         <option value="Raiders">Raiders</option>
         <option value="HORDE">HORDE</option>
         <option value="Ironborne">Ironborne</option>
@@ -52,7 +52,7 @@
     <div class="section-header defender-header">🛡️ Defender 🛡️</div>
     <label for="defenderFaction">Faction:</label>
     <select id="defenderFaction" onchange="updateUnitLabels('defender')">
-        <option value="Dominion">Dominion</option>
+        <option value="Empire">Empire</option>
         <option value="Raiders">Raiders</option>
         <option value="HORDE">HORDE</option>
         <option value="Ironborne">Ironborne</option>
@@ -128,7 +128,7 @@
 
     <script>
         const leaderMap = {
-            "Dominion": ["Legionaire", "Imperial guard"],
+            "Empire": ["Legionaire", "Imperial guard"],
             "Raiders": ["Lord of the Swamp", "Lord of the Tides"],
             "HORDE": ["Shaiyan Battleborn", "Throgg Stoneface"],
             "Ironborne": ["Silverbolt", "Guardian"],
@@ -138,7 +138,7 @@
 
 
         const unitMap = {
-            "Dominion": ["Ranger", "Sentinel", "Siege Tower", "Corvette", "Galley"],
+            "Empire": ["Ranger", "Sentinel", "Siege Tower", "Corvette", "Galley"],
             "Raiders": ["Raider", "Hunter", "Ballista", "Marauder", "Bireme"],
             "HORDE": ["Bearzerker", "Yotes", "Battering Ram", "Warship", "Karve"],
             "Ironborne": ["Guardian", "Crossbowmen", "Trebuchet", "Ironclad", "Cruiser"],
