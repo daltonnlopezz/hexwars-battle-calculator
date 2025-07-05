@@ -383,104 +383,171 @@
             console.log("[DEBUG] Sending Defenders:", defenders);
             console.log("[DEBUG] Sending Supporters:", supporters);
 
-            const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
-                method: "POST",
-                mode: "cors",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json"
-                },
-                body: JSON.stringify({
-                    attackers: attackers,
-                    defenders: defenders,
-                    supporters: supporters
-                })
-            });
-
-            console.log("[DEBUG] Fetch response:", response);
-
-            if (!response.ok) {
-                document.getElementById("results").textContent = "❌ Error submitting battle. Try again.";
-                return;
-            }
-
-            const data = await response.json();
-            console.log("[DEBUG] Parsed JSON response:", data);
-
+            // Show loading state
             const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = `
-                <div class="results-wrapper">
-                    <div class="results-card">
-                        <div class="battle-results">
-                            <h2 style="color: #ffd700; text-align: center; margin-bottom: 20px;">⚔️ BATTLE RESULTS ⚔️</h2>
-                            <div style="text-align: center; margin-bottom: 20px;">
+            resultsDiv.innerHTML = '<div class="loading">Calculating Battle Results...</div>';
+
+            try {
+                const response = await fetch("https://hexwars-api.onrender.com/calculate_battle", {
+                    method: "POST",
+                    mode: "cors",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({
+                        attackers: attackers,
+                        defenders: defenders,
+                        supporters: supporters
+                    })
+                });
+
+                console.log("[DEBUG] Fetch response:", response);
+
+                if (!response.ok) {
+                    resultsDiv.innerHTML = '<div class="results-card" style="text-align: center; color: #ff4444; padding: 20px;">❌ Error submitting battle. Please try again.</div>';
+                    return;
+                }
+
+                const data = await response.json();
+                console.log("[DEBUG] Parsed JSON response:", data);
+
+                resultsDiv.innerHTML = `
+                    <div class="results-wrapper">
+                        <div class="results-card">
+                            <div class="battle-results">
+                                <h2>⚔️ BATTLE RESULTS ⚔️</h2>
                                 <h3 style="color: ${data.battle_results.winner === 'Attackers' ? '#ff4444' : '#44ff44'}">
                                     ${data.battle_results.winner} Victory!
                                 </h3>
-                                <p>Attacker Power: ${data.battle_results.attacker_power}</p>
-                                <p>Defender Power: ${data.battle_results.defender_power}</p>
-                                <p>Power Difference: ${data.battle_results.power_diff}</p>
-                                <p>Power Difference %: ${data.battle_results.power_diff_percentage}%</p>
-                            </div>
-                        </div>
-
-                        <div class="attackers-section">
-                            <h3 style="color: #ff4444; margin-top: 20px;">�� ATTACKERS 💥</h3>
-                            <div style="margin-left: 20px;">
-                                <p>Battle Power: ${data.attackers.battle_power}</p>
-                                <p>Supporters Power: ${data.attackers.supporters_power}</p>
-                                <p>TCP Modifier: ${data.attackers.tcp_modifier}</p>
-                                <p>TCP: ${data.attackers.tcp}</p>
-                                <p>Total Lost Units: ${data.attackers.total_lost_units}</p>
-                                <h4>Remaining Army:</h4>
-                                <ul style="list-style-type: none; padding-left: 20px;">
-                                    <li>Basic: ${data.attackers.remaining_army.basic}</li>
-                                    <li>Special: ${data.attackers.remaining_army.special}</li>
-                                    <li>Siege: ${data.attackers.remaining_army.siege}</li>
-                                    <li>Combat Ship: ${data.attackers.remaining_army.combat_ship}</li>
-                                    <li>Transport Ship: ${data.attackers.remaining_army.transport_ship}</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="defenders-section">
-                            <h3 style="color: #44ff44; margin-top: 20px;">🛡️ DEFENDERS 🛡️</h3>
-                            <div style="margin-left: 20px;">
-                                <p>Battle Power: ${data.defenders.battle_power}</p>
-                                <p>Supporters Power: ${data.defenders.supporters_power}</p>
-                                <p>TCP Modifier: ${data.defenders.tcp_modifier}</p>
-                                <p>TCP: ${data.defenders.tcp}</p>
-                                <p>Total Lost Units: ${data.defenders.total_lost_units}</p>
-                                <h4>Remaining Army:</h4>
-                                <ul style="list-style-type: none; padding-left: 20px;">
-                                    <li>Basic: ${data.defenders.remaining_army.basic}</li>
-                                    <li>Special: ${data.defenders.remaining_army.special}</li>
-                                    <li>Siege: ${data.defenders.remaining_army.siege}</li>
-                                    <li>Combat Ship: ${data.defenders.remaining_army.combat_ship}</li>
-                                    <li>Transport Ship: ${data.defenders.remaining_army.transport_ship}</li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        ${data.special_results ? `
-                            <div class="special-results">
-                                <h3 style="color: #ffd700; margin-top: 20px;">✨ ADDITIONAL RESULTS ✨</h3>
-                                <div style="margin-left: 20px;">
-                                    ${data.special_results.lost_souls ? `<p>Lost Souls Collected: ${data.special_results.lost_souls}</p>` : ''}
-                                    ${data.special_results.resources_collected ? `
-                                        <h4>Resources Collected:</h4>
-                                        <ul style="list-style-type: none; padding-left: 20px;">
-                                            <li>Food: ${data.special_results.resources_collected.food}</li>
-                                            <li>Gold: ${data.special_results.resources_collected.gold}</li>
-                                            <li>Iron: ${data.special_results.resources_collected.iron}</li>
-                                        </ul>
-                                    ` : ''}
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <div class="stat-label">Attacker Power</div>
+                                        <div class="stat-value">${data.battle_results.attacker_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Defender Power</div>
+                                        <div class="stat-value">${data.battle_results.defender_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Power Difference</div>
+                                        <div class="stat-value">${data.battle_results.power_diff}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Power Difference %</div>
+                                        <div class="stat-value">${data.battle_results.power_diff_percentage}%</div>
+                                    </div>
                                 </div>
                             </div>
-                        ` : ''}
+
+                            <div class="attackers-section">
+                                <h3>💥 ATTACKERS 💥</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <div class="stat-label">Battle Power</div>
+                                        <div class="stat-value">${data.attackers.battle_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Supporters Power</div>
+                                        <div class="stat-value">${data.attackers.supporters_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">TCP Modifier</div>
+                                        <div class="stat-value">${data.attackers.tcp_modifier}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">TCP</div>
+                                        <div class="stat-value">${data.attackers.tcp}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Total Lost Units</div>
+                                        <div class="stat-value">${data.attackers.total_lost_units}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="remaining-army">
+                                    <h4>Remaining Army</h4>
+                                    <ul class="army-list">
+                                        <li>Basic: ${data.attackers.remaining_army.basic}</li>
+                                        <li>Special: ${data.attackers.remaining_army.special}</li>
+                                        <li>Siege: ${data.attackers.remaining_army.siege}</li>
+                                        <li>Combat Ship: ${data.attackers.remaining_army.combat_ship}</li>
+                                        <li>Transport Ship: ${data.attackers.remaining_army.transport_ship}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="defenders-section">
+                                <h3>🛡️ DEFENDERS 🛡️</h3>
+                                <div class="stats-grid">
+                                    <div class="stat-item">
+                                        <div class="stat-label">Battle Power</div>
+                                        <div class="stat-value">${data.defenders.battle_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Supporters Power</div>
+                                        <div class="stat-value">${data.defenders.supporters_power}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">TCP Modifier</div>
+                                        <div class="stat-value">${data.defenders.tcp_modifier}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">TCP</div>
+                                        <div class="stat-value">${data.defenders.tcp}</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-label">Total Lost Units</div>
+                                        <div class="stat-value">${data.defenders.total_lost_units}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="remaining-army">
+                                    <h4>Remaining Army</h4>
+                                    <ul class="army-list">
+                                        <li>Basic: ${data.defenders.remaining_army.basic}</li>
+                                        <li>Special: ${data.defenders.remaining_army.special}</li>
+                                        <li>Siege: ${data.defenders.remaining_army.siege}</li>
+                                        <li>Combat Ship: ${data.defenders.remaining_army.combat_ship}</li>
+                                        <li>Transport Ship: ${data.defenders.remaining_army.transport_ship}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            ${data.special_results ? `
+                                <div class="special-results">
+                                    <h3>✨ ADDITIONAL RESULTS ✨</h3>
+                                    ${data.special_results.lost_souls ? `
+                                        <div class="stat-item" style="max-width: 200px; margin: 0 auto;">
+                                            <div class="stat-label">Lost Souls Collected</div>
+                                            <div class="stat-value">${data.special_results.lost_souls}</div>
+                                        </div>
+                                    ` : ''}
+                                    ${data.special_results.resources_collected ? `
+                                        <div class="resources-grid">
+                                            <div class="resource-item">
+                                                <div class="resource-label">Food</div>
+                                                <div class="resource-value">${data.special_results.resources_collected.food}</div>
+                                            </div>
+                                            <div class="resource-item">
+                                                <div class="resource-label">Gold</div>
+                                                <div class="resource-value">${data.special_results.resources_collected.gold}</div>
+                                            </div>
+                                            <div class="resource-item">
+                                                <div class="resource-label">Iron</div>
+                                                <div class="resource-value">${data.special_results.resources_collected.iron}</div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            } catch (error) {
+                console.error("[DEBUG] Error:", error);
+                resultsDiv.innerHTML = '<div class="results-card" style="text-align: center; color: #ff4444; padding: 20px;">❌ Network error. Please check your connection and try again.</div>';
+            }
         }
 
 
