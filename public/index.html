@@ -465,6 +465,16 @@
                                     </div>
                                 </div>
                                 
+                                ${(data.attackers.cavalry_charge_losses.basic > 0 || data.attackers.cavalry_charge_losses.special > 0 || data.attackers.cavalry_charge_losses.siege > 0) ? `
+                                    <div class="remaining-army">
+                                        <h4>Lost to Cavalry Charge</h4>
+                                        <ul class="army-list">
+                                            <li>Basic: ${data.attackers.cavalry_charge_losses.basic}</li>
+                                            <li>Special: ${data.attackers.cavalry_charge_losses.special}</li>
+                                            <li>Siege: ${data.attackers.cavalry_charge_losses.siege}</li>
+                                        </ul>
+                                    </div>
+                                ` : ''}
                                 <div class="remaining-army">
                                     <h4>Remaining Army</h4>
                                     <ul class="army-list">
@@ -502,6 +512,16 @@
                                     </div>
                                 </div>
                                 
+                                ${(data.defenders.cavalry_charge_losses.basic > 0 || data.defenders.cavalry_charge_losses.special > 0 || data.defenders.cavalry_charge_losses.siege > 0) ? `
+                                    <div class="remaining-army">
+                                        <h4>Lost to Cavalry Charge</h4>
+                                        <ul class="army-list">
+                                            <li>Basic: ${data.defenders.cavalry_charge_losses.basic}</li>
+                                            <li>Special: ${data.defenders.cavalry_charge_losses.special}</li>
+                                            <li>Siege: ${data.defenders.cavalry_charge_losses.siege}</li>
+                                        </ul>
+                                    </div>
+                                ` : ''}
                                 <div class="remaining-army">
                                     <h4>Remaining Army</h4>
                                     <ul class="army-list">
