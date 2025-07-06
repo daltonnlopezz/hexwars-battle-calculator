@@ -622,8 +622,8 @@
                         <div class="results-card">
                             <div class="battle-results">
                                 <h2>⚔️ BATTLE RESULTS ⚔️</h2>
-                                <h3 style="color: ${data.battle_results.winner === 'Attackers' ? '#ff4444' : '#44ff44'}">
-                                    ${data.battle_results.winner} Victory!
+                                <h3 style="color: ${data.battle_results.winner === 'Attackers' ? '#ff4444' : (data.battle_results.winner === 'Defenders' ? '#44ff44' : '#888888')}">
+                                    ${data.battle_results.winner === 'Tie' ? "It's a Tie!" : `${data.battle_results.winner} Victory!`}
                                 </h3>
                                 <div class="stats-grid">
                                     <div class="stat-item">
