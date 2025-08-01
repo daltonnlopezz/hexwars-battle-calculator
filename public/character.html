@@ -434,17 +434,17 @@
             const formData = new FormData(this);
             const data = Object.fromEntries(formData);
             
-            try {
-                const response = await fetch('/api/characters/create', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        ...data,
-                        session_id: sessionId
-                    })
-                });
+                         try {
+                 const response = await fetch('https://hexwars-api.onrender.com/api/characters/create', {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                     },
+                     body: JSON.stringify({
+                         ...data,
+                         session_id: sessionId
+                     })
+                 });
                 
                 const result = await response.json();
                 
@@ -475,11 +475,11 @@
             }
         });
         
-        // Load Characters
-        async function loadCharacters() {
-            try {
-                const response = await fetch(`/api/characters?session_id=${sessionId}`);
-                const characters = await response.json();
+                 // Load Characters
+         async function loadCharacters() {
+             try {
+                 const response = await fetch(`https://hexwars-api.onrender.com/api/characters?session_id=${sessionId}`);
+                 const characters = await response.json();
                 
                 const characterList = document.getElementById('characterList');
                 characterList.innerHTML = '';
@@ -525,9 +525,9 @@
                 return;
             }
             
-            try {
-                const response = await fetch(`/api/characters/${characterId}`);
-                const result = await response.json();
+                         try {
+                 const response = await fetch(`https://hexwars-api.onrender.com/api/characters/${characterId}`);
+                 const result = await response.json();
                 
                 if (response.ok) {
                     const char = result.character;
@@ -571,10 +571,10 @@
                 return;
             }
             
-            try {
-                const response = await fetch(`/api/characters/${characterId}`, {
-                    method: 'DELETE'
-                });
+                         try {
+                 const response = await fetch(`https://hexwars-api.onrender.com/api/characters/${characterId}`, {
+                     method: 'DELETE'
+                 });
                 
                 if (response.ok) {
                     loadCharacters(); // Refresh the list
