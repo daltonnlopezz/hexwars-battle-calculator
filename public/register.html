@@ -230,7 +230,22 @@
                     })
                 });
                 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+                
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    showMessage('error', 'Invalid response from server');
+                    return;
+                }
+                
+                console.log('Parsed data:', data);
                 
                 if (data.success) {
                     showMessage('success', 'Account created successfully! Redirecting to login...');
@@ -243,6 +258,7 @@
                     showMessage('error', data.error || 'Registration failed');
                 }
             } catch (error) {
+                console.error('Fetch error:', error);
                 showMessage('error', 'Network error. Please try again.');
             }
         });
