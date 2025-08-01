@@ -27,6 +27,24 @@
             font-size: 2.5em;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
         }
+        .back-btn {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .back-btn button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .back-btn button:hover {
+            background-color: #666;
+            transform: translateY(-2px);
+        }
         .nav-tabs {
             display: flex;
             margin-bottom: 30px;
@@ -161,6 +179,13 @@
 <body>
     <div class="container">
         <h1>🎮 Fantasy Quest Character Management</h1>
+        
+        <!-- Back to Battle Calculator Button -->
+        <div class="back-btn">
+            <a href="index.html">
+                <button>View Battle Calculator</button>
+            </a>
+        </div>
         
         <div class="nav-tabs">
             <button class="nav-tab active" onclick="showTab('create')">Create Character</button>
