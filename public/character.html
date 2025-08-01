@@ -427,53 +427,93 @@
             event.target.classList.add('active');
         }
         
-        // Create Character Form Handler
-        document.getElementById('createForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
-            
-                         try {
-                 const response = await fetch('https://hexwars-api.onrender.com/api/characters/create', {
-                     method: 'POST',
-                     headers: {
-                         'Content-Type': 'application/json',
-                     },
-                     body: JSON.stringify({
-                         ...data,
-                         session_id: sessionId
-                     })
-                 });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    document.getElementById('createResult').innerHTML = `
-                        <div class="alert alert-success">
-                            <strong>Character Created Successfully!</strong><br>
-                            Character ID: ${result.character_id}<br>
-                            Name: ${result.character.name}<br>
-                            Race: ${result.character.race}<br>
-                            Role: ${result.character.role}
-                        </div>
-                    `;
-                    this.reset();
-                } else {
-                    document.getElementById('createResult').innerHTML = `
-                        <div class="alert alert-error">
-                            <strong>Error:</strong> ${result.error}
-                        </div>
-                    `;
-                }
-            } catch (error) {
-                document.getElementById('createResult').innerHTML = `
-                    <div class="alert alert-error">
-                        <strong>Error:</strong> ${error.message}
-                    </div>
-                `;
-            }
-        });
+                 // Create Character Form Handler
+         document.getElementById('createForm').addEventListener('submit', async function(e) {
+             e.preventDefault();
+             
+             console.log('=== CREATE CHARACTER DEBUG ===');
+             console.log('Form submitted');
+             
+             const formData = new FormData(this);
+             const data = Object.fromEntries(formData);
+             
+             console.log('Form data:', data);
+             console.log('Session ID:', sessionId);
+             
+             const requestBody = {
+                 ...data,
+                 session_id: sessionId
+             };
+             
+             console.log('Request body:', requestBody);
+             
+                          try {
+                  console.log('Making API request to: https://hexwars-api.onrender.com/api/characters/create');
+                  
+                  const response = await fetch('https://hexwars-api.onrender.com/api/characters/create', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify(requestBody)
+                  });
+                 
+                 console.log('Response status:', response.status);
+                 console.log('Response headers:', response.headers);
+                 
+                 const responseText = await response.text();
+                 console.log('Response text:', responseText);
+                 
+                 let result;
+                 try {
+                     result = JSON.parse(responseText);
+                     console.log('Parsed response:', result);
+                 } catch (parseError) {
+                     console.error('JSON parse error:', parseError);
+                     document.getElementById('createResult').innerHTML = `
+                         <div class="alert alert-error">
+                             <strong>Error:</strong> Invalid response from server
+                         </div>
+                     `;
+                     return;
+                 }
+                 
+                 if (response.ok) {
+                     console.log('Character created successfully!');
+                     document.getElementById('createResult').innerHTML = `
+                         <div class="alert alert-success">
+                             <strong>Character Created Successfully!</strong><br>
+                             Character ID: ${result.character_id}<br>
+                             Name: ${result.character.name}<br>
+                             Race: ${result.character.race}<br>
+                             Role: ${result.character.role}
+                         </div>
+                     `;
+                     this.reset();
+                     
+                     // Refresh character list
+                     setTimeout(() => {
+                         loadCharacters();
+                     }, 1000);
+                 } else {
+                     console.log('Character creation failed:', result.error);
+                     document.getElementById('createResult').innerHTML = `
+                         <div class="alert alert-error">
+                             <strong>Error:</strong> ${result.error}
+                         </div>
+                     `;
+                 }
+             } catch (error) {
+                 console.error('Fetch error:', error);
+                 document.getElementById('createResult').innerHTML = `
+                     <div class="alert alert-error">
+                         <strong>Error:</strong> ${error.message}
+                     </div>
+                 `;
+             }
+             
+             console.log('=== END CREATE CHARACTER DEBUG ===');
+         });
         
                  // Load Characters
          async function loadCharacters() {
