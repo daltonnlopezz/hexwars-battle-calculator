@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Quest - Character Management</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #2a5298;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .nav-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #ddd;
+        }
+        .nav-tab {
+            padding: 15px 25px;
+            background: #f8f9fa;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        .nav-tab.active {
+            background: #2a5298;
+            color: white;
+        }
+        .nav-tab:hover {
+            background: #1e3c72;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1e3c72;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+        .character-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .character-card {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .character-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+        .character-stats {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-box input {
+            width: 300px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 Fantasy Quest Character Management</h1>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('create')">Create Character</button>
+            <button class="nav-tab" onclick="showTab('manage')">Manage Characters</button>
+            <button class="nav-tab" onclick="showTab('view')">View Character</button>
+        </div>
+        
+        <!-- Create Character Tab -->
+        <div id="create" class="tab-content active">
+            <h2>Create New Character</h2>
+            <form id="createForm">
+                <div class="form-group">
+                    <label for="name">Character Name:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender" required>
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Non-binary">Non-binary</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="race">Race:</label>
+                    <select id="race" name="race" required>
+                        <option value="">Select Race</option>
+                        <option value="Human">Human</option>
+                        <option value="Elf">Elf</option>
+                        <option value="Dwarf">Dwarf</option>
+                        <option value="Orc">Orc</option>
+                        <option value="Goblin">Goblin</option>
+                        <option value="Troll">Troll</option>
+                        <option value="Terrador">Terrador</option>
+                        <option value="Vampire">Vampire</option>
+                        <option value="Werewolf">Werewolf</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="role">Role:</label>
+                    <select id="role" name="role" required>
+                        <option value="">Select Role</option>
+                        <option value="Warrior">Warrior</option>
+                        <option value="Mage">Mage</option>
+                        <option value="Ranger">Ranger</option>
+                        <option value="Rogue">Rogue</option>
+                        <option value="Cleric">Cleric</option>
+                        <option value="Paladin">Paladin</option>
+                        <option value="Bard">Bard</option>
+                        <option value="Druid">Druid</option>
+                        <option value="Monk">Monk</option>
+                        <option value="Warlock">Warlock</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="faction">Faction (Optional):</label>
+                    <select id="faction" name="faction">
+                        <option value="">No Faction</option>
+                        <option value="Alliance">Alliance</option>
+                        <option value="Horde">Horde</option>
+                        <option value="Neutral">Neutral</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Create Character</button>
+            </form>
+            <div id="createResult"></div>
+        </div>
+        
+        <!-- Manage Characters Tab -->
+        <div id="manage" class="tab-content">
+            <h2>Manage Characters</h2>
+            <div class="search-box">
+                <input type="text" id="searchCharacters" placeholder="Search characters..." onkeyup="searchCharacters()">
+            </div>
+            <button class="btn btn-secondary" onclick="loadCharacters()">Refresh List</button>
+            <div id="characterList" class="character-list"></div>
+        </div>
+        
+        <!-- View Character Tab -->
+        <div id="view" class="tab-content">
+            <h2>View Character Details</h2>
+            <div class="form-group">
+                <label for="characterId">Character ID:</label>
+                <input type="text" id="characterId" placeholder="Enter character ID">
+                <button class="btn btn-primary" onclick="viewCharacter()">View Character</button>
+            </div>
+            <div id="characterDetails"></div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+        
+        // Create Character Form Handler
+        document.getElementById('createForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch('/api/characters/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('createResult').innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>Character Created Successfully!</strong><br>
+                            Character ID: ${result.character_id}<br>
+                            Name: ${result.character.name}<br>
+                            Race: ${result.character.race}<br>
+                            Role: ${result.character.role}
+                        </div>
+                    `;
+                    this.reset();
+                } else {
+                    document.getElementById('createResult').innerHTML = `
+                        <div class="alert alert-error">
+                            <strong>Error:</strong> ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('createResult').innerHTML = `
+                    <div class="alert alert-error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        });
+        
+        // Load Characters
+        async function loadCharacters() {
+            try {
+                const response = await fetch('/api/characters');
+                const characters = await response.json();
+                
+                const characterList = document.getElementById('characterList');
+                characterList.innerHTML = '';
+                
+                characters.forEach(char => {
+                    const card = document.createElement('div');
+                    card.className = 'character-card';
+                    card.innerHTML = `
+                        <div class="character-name">${char.name}</div>
+                        <div class="character-stats">
+                            <strong>ID:</strong> ${char.id}<br>
+                            <strong>Race:</strong> ${char.race}<br>
+                            <strong>Role:</strong> ${char.role}<br>
+                            <strong>Level:</strong> ${char.level}<br>
+                            <strong>Health:</strong> ${char.current_health}/${char.max_health}<br>
+                            <strong>Gold:</strong> ${char.gold}
+                        </div>
+                        <button class="btn btn-secondary" onclick="deleteCharacter('${char.id}')">Delete</button>
+                    `;
+                    characterList.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading characters:', error);
+            }
+        }
+        
+        // Search Characters
+        function searchCharacters() {
+            const searchTerm = document.getElementById('searchCharacters').value.toLowerCase();
+            const cards = document.querySelectorAll('.character-card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? 'block' : 'none';
+            });
+        }
+        
+        // View Character Details
+        async function viewCharacter() {
+            const characterId = document.getElementById('characterId').value;
+            if (!characterId) {
+                alert('Please enter a character ID');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/characters/${characterId}`);
+                const result = await response.json();
+                
+                if (response.ok) {
+                    const char = result.character;
+                    document.getElementById('characterDetails').innerHTML = `
+                        <div class="character-card">
+                            <div class="character-name">${char.name}</div>
+                            <div class="character-stats">
+                                <strong>ID:</strong> ${char.id}<br>
+                                <strong>Race:</strong> ${char.race}<br>
+                                <strong>Role:</strong> ${char.role}<br>
+                                <strong>Gender:</strong> ${char.gender}<br>
+                                <strong>Faction:</strong> ${char.faction || 'None'}<br>
+                                <strong>Level:</strong> ${char.level}<br>
+                                <strong>Health:</strong> ${char.current_health}/${char.max_health}<br>
+                                <strong>Gold:</strong> ${char.gold}<br>
+                                <strong>Experience:</strong> ${char.experience}<br>
+                                <strong>Carry Weight:</strong> ${char.current_weight}/${char.carry_weight}<br>
+                                <strong>Active Damage Type:</strong> ${char.active_damage_type}
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('characterDetails').innerHTML = `
+                        <div class="alert alert-error">
+                            <strong>Error:</strong> ${result.error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('characterDetails').innerHTML = `
+                    <div class="alert alert-error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+        
+        // Delete Character
+        async function deleteCharacter(characterId) {
+            if (!confirm('Are you sure you want to delete this character?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/characters/${characterId}`, {
+                    method: 'DELETE'
+                });
+                
+                if (response.ok) {
+                    loadCharacters(); // Refresh the list
+                } else {
+                    const result = await response.json();
+                    alert(`Error: ${result.error}`);
+                }
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+        
+        // Load characters when page loads
+        window.onload = function() {
+            loadCharacters();
+        };
+    </script>
+</body>
+</html> 
