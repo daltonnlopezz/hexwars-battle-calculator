@@ -65,6 +65,27 @@
     <!-- Main Resource Calculator Container -->
     <div class="calculator-container">
         
+        <!-- Faction Selector -->
+        <div class="army-card">
+            <div class="card-header attacker-header">
+                <span class="header-icon">⚔️</span>
+                <h2>Faction Selection</h2>
+            </div>
+            <div class="card-content">
+                <div class="faction-selector">
+                    <label for="resourceFaction">Faction:</label>
+                    <select id="resourceFaction">
+                        <option value="Empire">Empire</option>
+                        <option value="Raiders">Raiders</option>
+                        <option value="HORDE">HORDE</option>
+                        <option value="Ironborne">Ironborne</option>
+                        <option value="Vanguard">Vanguard</option>
+                        <option value="Damned">Damned</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
         <!-- Terrain Section -->
         <div class="army-card attacker-card">
             <div class="card-header attacker-header">
@@ -332,6 +353,9 @@
         }
 
         function calculateResources() {
+            // Collect faction
+            const faction = document.getElementById('resourceFaction').value;
+            
             // Collect terrain data
             const terrainData = {
                 plains: parseInt(document.getElementById('plains').value) || 0,
@@ -353,6 +377,7 @@
             
             // Prepare data for server
             const requestData = {
+                faction: faction,
                 terrain: terrainData,
                 buildings: buildingData
             };
@@ -396,17 +421,17 @@
             const poolIron = parseInt(document.getElementById('poolIron').value) || 0;
             const poolOther = parseInt(document.getElementById('poolOther').value) || 0;
 
-            // Get calculated results (this would normally come from the server response)
-            // For now, we'll simulate this with the displayed results
+            // Get calculated results from the displayed results
             const foodResult = document.querySelector('.resource-item:nth-child(1) .resource-value')?.textContent || '0';
             const goldResult = document.querySelector('.resource-item:nth-child(2) .resource-value')?.textContent || '0';
             const ironResult = document.querySelector('.resource-item:nth-child(3) .resource-value')?.textContent || '0';
+            const otherResult = document.querySelector('.resource-item:nth-child(4) .resource-value')?.textContent || '0';
 
             // Add calculated resources to pool
             document.getElementById('poolFood').value = poolFood + parseInt(foodResult);
             document.getElementById('poolGold').value = poolGold + parseInt(goldResult);
             document.getElementById('poolIron').value = poolIron + parseInt(ironResult);
-            // Note: Other resource calculation would be added here when implemented
+            document.getElementById('poolOther').value = poolOther + parseInt(otherResult);
 
             showNotification('Resources added to pool!', 'success');
         }
@@ -436,6 +461,13 @@
                 html += `<div class="resource-item">
                     <span class="resource-label">Iron:</span>
                     <span class="resource-value">${results.iron}</span>
+                </div>`;
+            }
+            
+            if (results.other !== undefined) {
+                html += `<div class="resource-item">
+                    <span class="resource-label">Other:</span>
+                    <span class="resource-value">${results.other}</span>
                 </div>`;
             }
             
@@ -589,6 +621,29 @@
             color: #ffd700;
             min-width: 30px;
             text-align: center;
+        }
+
+        .faction-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .faction-selector label {
+            font-weight: bold;
+            color: #ffd700;
+            min-width: 80px;
+        }
+
+        .faction-selector select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #555;
+            border-radius: 5px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
         }
 
         @media (max-width: 768px) {
