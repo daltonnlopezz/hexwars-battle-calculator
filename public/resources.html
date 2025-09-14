@@ -36,8 +36,8 @@
         </a>
     </div>
 
-    <!-- Round Counter Section -->
-    <div class="round-counter-section">
+    <!-- Round Counter and Faction Selection Section -->
+    <div class="round-faction-section">
         <div class="round-counter-card">
             <div class="round-counter-header">
                 <span class="round-counter-icon">🎯</span>
@@ -54,6 +54,26 @@
                 <button class="round-btn" onclick="increaseRound()" title="Next Round">
                     <span>+</span>
                 </button>
+            </div>
+        </div>
+        
+        <div class="faction-selection-card">
+            <div class="faction-selection-header">
+                <span class="faction-selection-icon">⚔️</span>
+                <h3>Faction Selection</h3>
+            </div>
+            <div class="faction-selection-controls">
+                <div class="faction-selector">
+                    <label for="recruitmentFaction">Faction:</label>
+                    <select id="recruitmentFaction" onchange="updateRecruitmentUnits()">
+                        <option value="Empire">Empire</option>
+                        <option value="Raiders">Raiders</option>
+                        <option value="HORDE">HORDE</option>
+                        <option value="Ironborne">Ironborne</option>
+                        <option value="Vanguard">Vanguard</option>
+                        <option value="Damned">Damned</option>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
@@ -116,10 +136,6 @@
                                 <input type="number" id="plains" min="0" value="0" placeholder="0">
                             </div>
                             <div class="unit-row">
-                                <label for="forest">Forest:</label>
-                                <input type="number" id="forest" min="0" value="0" placeholder="0">
-                            </div>
-                            <div class="unit-row">
                                 <label for="hills">Hills:</label>
                                 <input type="number" id="hills" min="0" value="0" placeholder="0">
                             </div>
@@ -147,28 +163,12 @@
                                 <input type="number" id="castle" min="0" value="0" placeholder="0">
                             </div>
                             <div class="unit-row">
-                                <label for="outpost">Outpost:</label>
-                                <input type="number" id="outpost" min="0" value="0" placeholder="0">
-                            </div>
-                            <div class="unit-row">
-                                <label for="harbor">Harbor:</label>
-                                <input type="number" id="harbor" min="0" value="0" placeholder="0">
-                            </div>
-                            <div class="unit-row">
-                                <label for="bloodshrine">Bloodshrine:</label>
-                                <input type="number" id="bloodshrine" min="0" value="0" placeholder="0">
-                            </div>
-                            <div class="unit-row">
                                 <label for="mine">Mine:</label>
                                 <input type="number" id="mine" min="0" value="0" placeholder="0">
                             </div>
                             <div class="unit-row">
                                 <label for="fishery">Fishery:</label>
                                 <input type="number" id="fishery" min="0" value="0" placeholder="0">
-                            </div>
-                            <div class="unit-row">
-                                <label for="breeding_den">Breeding Den:</label>
-                                <input type="number" id="breeding_den" min="0" value="0" placeholder="0">
                             </div>
                         </div>
                     </div>
@@ -210,17 +210,6 @@
                     <h2>Unit Recruitment</h2>
                 </div>
                 <div class="card-content">
-                    <div class="faction-selector">
-                        <label for="recruitmentFaction">Faction:</label>
-                        <select id="recruitmentFaction" onchange="updateRecruitmentUnits()">
-                            <option value="Empire">Empire</option>
-                            <option value="Raiders">Raiders</option>
-                            <option value="HORDE">HORDE</option>
-                            <option value="Ironborne">Ironborne</option>
-                            <option value="Vanguard">Vanguard</option>
-                            <option value="Damned">Damned</option>
-                        </select>
-                    </div>
                     <div class="units-section">
                         <h3>Available Units</h3>
                         <div id="recruitmentUnits" class="recruitment-grid"></div>
@@ -578,14 +567,14 @@
         // Income Calculation Functions
         function clearAllIncomeInputs() {
             // Clear terrain inputs
-            const terrainInputs = ['plains', 'forest', 'hills', 'sea'];
+            const terrainInputs = ['plains', 'hills', 'sea'];
             terrainInputs.forEach(id => {
                 const input = document.getElementById(id);
                 if (input) input.value = '0';
             });
             
             // Clear building inputs
-            const buildingInputs = ['outpost', 'harbor', 'castle', 'bloodshrine', 'mine', 'fishery', 'breeding_den'];
+            const buildingInputs = ['castle', 'mine', 'fishery'];
             buildingInputs.forEach(id => {
                 const input = document.getElementById(id);
                 if (input) input.value = '0';
@@ -605,20 +594,15 @@
             // Get terrain data
             const terrainData = {
                 plains: parseInt(document.getElementById('plains').value) || 0,
-                forest: parseInt(document.getElementById('forest').value) || 0,
                 hills: parseInt(document.getElementById('hills').value) || 0,
                 sea: parseInt(document.getElementById('sea').value) || 0
             };
             
             // Get building data
             const buildingData = {
-                outposts: parseInt(document.getElementById('outpost').value) || 0,
-                harbors: parseInt(document.getElementById('harbor').value) || 0,
                 castles: parseInt(document.getElementById('castle').value) || 0,
-                bloodshrines: parseInt(document.getElementById('bloodshrine').value) || 0,
                 mines: parseInt(document.getElementById('mine').value) || 0,
-                fisheries: parseInt(document.getElementById('fishery').value) || 0,
-                breeding_dens: parseInt(document.getElementById('breeding_den').value) || 0
+                fisheries: parseInt(document.getElementById('fishery').value) || 0
             };
             
             // Calculate terrain income (example rates)
@@ -629,13 +613,33 @@
                 other: terrainData.sea * 0
             };
             
-            // Calculate building income (example rates)
-            const buildingIncome = {
-                food: (buildingData.castles * 5) + ((buildingData.fisheries > 0) ? (terrainData.sea * 1) : 0), 
-                gold: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
-                iron: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
-                other: buildingData.harbors * 0
-            };
+            // Get faction selection
+            const factionSelection = document.getElementById('recruitmentFaction').value;
+            
+            // Calculate building income based on faction
+            let buildingIncome;
+            if (factionSelection === "Ironborne") {
+                buildingIncome = {
+                    food: (buildingData.castles * 5) + ((buildingData.fisheries > 0) ? (terrainData.sea * 1) : 0), 
+                    gold: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    iron: (buildingData.castles * 5) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    other: 0
+                };
+            } else if (factionSelection === "Empire") {
+                buildingIncome = {
+                    food: (buildingData.castles * 5) + ((buildingData.fisheries > 0) ? (terrainData.sea * 1) : 0), 
+                    gold: (buildingData.castles * 5) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    iron: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    other: 0
+                };
+            } else {
+                buildingIncome = {
+                    food: (buildingData.castles * 5) + ((buildingData.fisheries > 0) ? (terrainData.sea * 1) : 0), 
+                    gold: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    iron: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                    other: 0
+                };
+            }
             
             // Calculate round income from terrain and buildings
             const roundIncomeData = {

@@ -410,12 +410,12 @@ h1 {
 
 /* Faction Selector */
 .faction-selector {
-    margin-bottom: 25px;
+    margin-bottom: 0;
     text-align: center;
-    padding: 15px;
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    border: 1px solid #333;
+    padding: 0;
+    background: transparent;
+    border: none;
+    width: 100%;
 }
 
 .faction-selector label {
@@ -423,7 +423,7 @@ h1 {
     margin-bottom: 10px;
     font-weight: bold;
     color: #ffd700;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .faction-selector select {
@@ -1958,17 +1958,19 @@ button:focus, a:focus, select:focus, input:focus {
     }
 }
 
-/* Round Counter Styles */
-.round-counter-section {
+/* Round Counter and Faction Selection Styles */
+.round-faction-section {
     max-width: 1400px;
     margin: 0 auto 20px auto;
     padding: 0 20px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
+    gap: 20px;
 }
 
-.round-counter-card {
+.round-counter-card,
+.faction-selection-card {
     background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
     border: 2px solid #444;
     border-radius: 15px;
@@ -1977,9 +1979,12 @@ button:focus, a:focus, select:focus, input:focus {
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    flex: 1;
+    max-width: 400px;
 }
 
-.round-counter-card::before {
+.round-counter-card::before,
+.faction-selection-card::before {
     content: '';
     position: absolute;
     top: 0;
@@ -1991,13 +1996,15 @@ button:focus, a:focus, select:focus, input:focus {
     animation: shimmer 3s infinite;
 }
 
-.round-counter-card:hover {
+.round-counter-card:hover,
+.faction-selection-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
     border-color: #ffd700;
 }
 
-.round-counter-header {
+.round-counter-header,
+.faction-selection-header {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2007,12 +2014,14 @@ button:focus, a:focus, select:focus, input:focus {
     position: relative;
 }
 
-.round-counter-icon {
+.round-counter-icon,
+.faction-selection-icon {
     font-size: 24px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-.round-counter-header h3 {
+.round-counter-header h3,
+.faction-selection-header h3 {
     margin: 0;
     font-size: 20px;
     font-weight: bold;
@@ -2020,7 +2029,8 @@ button:focus, a:focus, select:focus, input:focus {
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-.round-counter-controls {
+.round-counter-controls,
+.faction-selection-controls {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2244,11 +2254,19 @@ button:focus, a:focus, select:focus, input:focus {
         gap: 10px;
     }
 
-    .round-counter-card {
-        padding: 15px 20px;
+    .round-faction-section {
+        flex-direction: column;
+        gap: 15px;
     }
 
-    .round-counter-controls {
+    .round-counter-card,
+    .faction-selection-card {
+        padding: 15px 20px;
+        max-width: none;
+    }
+
+    .round-counter-controls,
+    .faction-selection-controls {
         gap: 15px;
     }
 
