@@ -264,9 +264,59 @@
     <!-- Notification -->
     <div id="notification" class="notification"></div>
 
+    <!-- Custom Confirmation Modal -->
+    <div id="confirmationModal" class="confirmation-modal">
+        <div class="confirmation-content">
+            <div class="confirmation-header">
+                <h3>Confirm Action</h3>
+            </div>
+            <div class="confirmation-body">
+                <p id="confirmationMessage"></p>
+            </div>
+            <div class="confirmation-footer">
+                <button id="confirmButton" class="confirm-btn">Confirm</button>
+                <button id="cancelButton" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Global variable to store calculated income
         let calculatedIncome = null;
+        
+        // Custom confirmation function
+        function showConfirmation(message, onConfirm, onCancel) {
+            const modal = document.getElementById('confirmationModal');
+            const messageElement = document.getElementById('confirmationMessage');
+            const confirmBtn = document.getElementById('confirmButton');
+            const cancelBtn = document.getElementById('cancelButton');
+            
+            messageElement.textContent = message;
+            modal.classList.add('show');
+            
+            // Remove existing event listeners
+            confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+            cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+            
+            // Add new event listeners
+            document.getElementById('confirmButton').addEventListener('click', () => {
+                modal.classList.remove('show');
+                if (onConfirm) onConfirm();
+            });
+            
+            document.getElementById('cancelButton').addEventListener('click', () => {
+                modal.classList.remove('show');
+                if (onCancel) onCancel();
+            });
+            
+            // Close on backdrop click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    if (onCancel) onCancel();
+                }
+            });
+        }
         
         // Unit data for each faction
         const factionUnits = {
@@ -644,17 +694,20 @@
                 `⚒️ Iron: +${calculatedIncome.iron}\n` +
                 `📦 Other: +${calculatedIncome.other}`;
             
-            if (confirm(confirmMessage)) {
-                // Update pool values
-                document.getElementById('poolFood').value = newPoolFood;
-                document.getElementById('poolGold').value = newPoolGold;
-                document.getElementById('poolIron').value = newPoolIron;
-                document.getElementById('poolOther').value = newPoolOther;
-                
-                showNotification(`Added ${calculatedIncome.food} food, ${calculatedIncome.gold} gold, ${calculatedIncome.iron} iron, ${calculatedIncome.other} other to resource pool!`, 'success');
-            } else {
-                showNotification('Resource income transfer cancelled.', 'info');
-            }
+            showConfirmation(confirmMessage, 
+                () => {
+                    // Update pool values
+                    document.getElementById('poolFood').value = newPoolFood;
+                    document.getElementById('poolGold').value = newPoolGold;
+                    document.getElementById('poolIron').value = newPoolIron;
+                    document.getElementById('poolOther').value = newPoolOther;
+                    
+                    showNotification(`Added ${calculatedIncome.food} food, ${calculatedIncome.gold} gold, ${calculatedIncome.iron} iron, ${calculatedIncome.other} other to resource pool!`, 'success');
+                },
+                () => {
+                    showNotification('Resource income transfer cancelled.', 'info');
+                }
+            );
         }
         
         function displayKingdomResults(terrainIncome, buildingIncome, roundIncome, totalIncome) {
@@ -807,15 +860,34 @@
                 other: 0
             };
             
+            let unitBreakdown = [];
+            
             units.forEach(unit => {
                 const quantity = parseInt(document.getElementById(`quantity_${unit.name}`).textContent) || 0;
                 if (quantity > 0) {
-                    totalExpenses.food += unit.food * quantity;
-                    totalExpenses.gold += unit.gold * quantity;
-                    totalExpenses.iron += unit.iron * quantity;
-                    totalExpenses.other += unit.thrall_egg_fae * quantity;
+                    const unitExpense = {
+                        name: unit.name,
+                        quantity: quantity,
+                        food: unit.food * quantity,
+                        gold: unit.gold * quantity,
+                        iron: unit.iron * quantity,
+                        other: unit.thrall_egg_fae * quantity
+                    };
+                    
+                    unitBreakdown.push(unitExpense);
+                    
+                    totalExpenses.food += unitExpense.food;
+                    totalExpenses.gold += unitExpense.gold;
+                    totalExpenses.iron += unitExpense.iron;
+                    totalExpenses.other += unitExpense.other;
                 }
             });
+            
+            // Check if any units are selected
+            if (totalExpenses.food === 0 && totalExpenses.gold === 0 && totalExpenses.iron === 0 && totalExpenses.other === 0) {
+                showNotification('Please select units to recruit first!', 'error');
+                return;
+            }
             
             // Check if pool has enough resources
             if (poolFood < totalExpenses.food || poolGold < totalExpenses.gold || 
@@ -824,13 +896,46 @@
                 return;
             }
             
-            // Deduct from pool
-            document.getElementById('poolFood').value = poolFood - totalExpenses.food;
-            document.getElementById('poolGold').value = poolGold - totalExpenses.gold;
-            document.getElementById('poolIron').value = poolIron - totalExpenses.iron;
-            document.getElementById('poolOther').value = poolOther - totalExpenses.other;
+            // Calculate new pool values
+            const newPoolFood = poolFood - totalExpenses.food;
+            const newPoolGold = poolGold - totalExpenses.gold;
+            const newPoolIron = poolIron - totalExpenses.iron;
+            const newPoolOther = poolOther - totalExpenses.other;
             
-            showNotification(`Deducted ${totalExpenses.food} food, ${totalExpenses.gold} gold, ${totalExpenses.iron} iron, ${totalExpenses.other} other from resource pool!`, 'success');
+            // Build unit breakdown for confirmation
+            let unitDetails = '';
+            unitBreakdown.forEach(unit => {
+                unitDetails += `${unit.name} (${unit.quantity}): 🍖${unit.food} 💰${unit.gold} ⚒️${unit.iron} 📦${unit.other}\n`;
+            });
+            
+            // Show confirmation popup
+            const confirmMessage = `Deduct unit expenses from resource pool?\n\n` +
+                `Current Pool:\n` +
+                `🍖 Food: ${poolFood} → ${newPoolFood}\n` +
+                `💰 Gold: ${poolGold} → ${newPoolGold}\n` +
+                `⚒️ Iron: ${poolIron} → ${newPoolIron}\n` +
+                `📦 Other: ${poolOther} → ${newPoolOther}\n\n` +
+                `Units to recruit:\n${unitDetails}\n` +
+                `Total expenses:\n` +
+                `🍖 Food: -${totalExpenses.food}\n` +
+                `💰 Gold: -${totalExpenses.gold}\n` +
+                `⚒️ Iron: -${totalExpenses.iron}\n` +
+                `📦 Other: -${totalExpenses.other}`;
+            
+            showConfirmation(confirmMessage, 
+                () => {
+                    // Deduct from pool
+                    document.getElementById('poolFood').value = newPoolFood;
+                    document.getElementById('poolGold').value = newPoolGold;
+                    document.getElementById('poolIron').value = newPoolIron;
+                    document.getElementById('poolOther').value = newPoolOther;
+                    
+                    showNotification(`Deducted ${totalExpenses.food} food, ${totalExpenses.gold} gold, ${totalExpenses.iron} iron, ${totalExpenses.other} other from resource pool!`, 'success');
+                },
+                () => {
+                    showNotification('Unit expense deduction cancelled.', 'info');
+                }
+            );
         }
         
         function displayExpenseResults(unitBreakdown, totalExpenses) {
