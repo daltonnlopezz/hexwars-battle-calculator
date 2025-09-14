@@ -23,18 +23,26 @@ h1 {
     text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
 }
 
+/* ========================================
+   NAVIGATION SYSTEM
+   ======================================== */
+
 /* Navigation Card */
 .nav-card {
     text-align: center;
     margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
 }
 
-.factions-btn {
+/* Base Navigation Button */
+.nav-btn {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     padding: 15px 25px;
-    background: linear-gradient(135deg, #444 0%, #666 100%);
     color: white;
     text-decoration: none;
     border-radius: 10px;
@@ -42,38 +50,160 @@ h1 {
     font-weight: bold;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
-.factions-btn:hover {
-    background: linear-gradient(135deg, #555 0%, #777 100%);
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.nav-btn:hover::before {
+    left: 100%;
+}
+
+.nav-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
-.character-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    padding: 15px 25px;
-    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
-    color: white;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    margin-left: 15px;
-}
-
-.character-btn:hover {
-    background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+.nav-btn:active {
+    transform: translateY(0);
 }
 
 .btn-icon {
     font-size: 18px;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* ========================================
+   NAVIGATION BUTTON THEMES
+   ======================================== */
+
+/* Battle Calculator - Red Theme */
+.battle-btn {
+    background: linear-gradient(135deg, #DC143C 0%, #B22222 100%);
+    border: 2px solid #8B0000;
+}
+
+.battle-btn:hover {
+    background: linear-gradient(135deg, #FF1744 0%, #D32F2F 100%);
+    border-color: #FFD700;
+    box-shadow: 0 6px 20px rgba(220, 20, 60, 0.4);
+}
+
+/* Factions - Blue Theme */
+.factions-btn {
+    background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%);
+    border: 2px solid #191970;
+}
+
+.factions-btn:hover {
+    background: linear-gradient(135deg, #5C85FF 0%, #1E90FF 100%);
+    border-color: #87CEEB;
+    box-shadow: 0 6px 20px rgba(65, 105, 225, 0.4);
+}
+
+/* Resources - Gold Theme */
+.resources-btn {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border: 2px solid #B8860B;
+    color: #8B4513;
+}
+
+.resources-btn:hover {
+    background: linear-gradient(135deg, #FFE55C 0%, #FFB347 100%);
+    border-color: #FFD700;
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+}
+
+.resources-btn .btn-icon {
+    color: #8B4513;
+}
+
+/* Character - Purple Theme */
+.character-btn {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    border: 2px solid #654321;
+}
+
+.character-btn:hover {
+    background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+    border-color: #FFD700;
+    box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+}
+
+/* Login - Green Theme */
+.login-btn {
+    background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+    border: 2px solid #006400;
+}
+
+.login-btn:hover {
+    background: linear-gradient(135deg, #32CD32 0%, #00FF00 100%);
+    border-color: #90EE90;
+    box-shadow: 0 6px 20px rgba(34, 139, 34, 0.4);
+}
+
+/* Register - Orange Theme */
+.register-btn {
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+    border: 2px solid #CC5500;
+}
+
+.register-btn:hover {
+    background: linear-gradient(135deg, #FFA500 0%, #FF7F50 100%);
+    border-color: #FFD700;
+    box-shadow: 0 6px 20px rgba(255, 140, 0, 0.4);
+}
+
+/* Back Button - Gray Theme */
+.back-btn {
+    background: linear-gradient(135deg, #696969 0%, #808080 100%);
+    border: 2px solid #2F4F4F;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #808080 0%, #A9A9A9 100%);
+    border-color: #C0C0C0;
+    box-shadow: 0 6px 20px rgba(105, 105, 105, 0.4);
+}
+
+/* Register Header - Orange Theme */
+.register-header {
+    background: linear-gradient(135deg, #FF8C00 0%, #FF6347 100%);
+    border-bottom: 3px solid #CC5500;
+}
+
+.register-header .header-icon {
+    color: #FFD700;
+}
+
+/* Character Header - Brown Theme */
+.character-header {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    border-bottom: 3px solid #654321;
+}
+
+.character-header .header-icon {
+    color: #FFD700;
+}
+
+/* Login Header - Green Theme */
+.login-header {
+    background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+    border-bottom: 3px solid #006400;
+}
+
+.login-header .header-icon {
+    color: #90EE90;
 }
 
 /* Calculator Container */
@@ -84,6 +214,8 @@ h1 {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
     align-items: start;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 /* Army Cards */
@@ -109,24 +241,64 @@ h1 {
     border-color: #66ff66;
 }
 
+.resources-card {
+    border-color: #27b345;
+}
+
+.terrain-card {
+    border-color: #ffd700;
+}
+
+.building-card {
+    border-color: #c4aa19;
+}
+
+.recruitment-card {
+    border-color: #ffd700;
+}
+
+/* ========================================
+   CARD HEADERS - THEMED SECTIONS
+   ======================================== */
+
+/* Base Card Header */
 .card-header {
     padding: 20px;
     display: flex;
     align-items: center;
     gap: 15px;
     border-bottom: 2px solid #333;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
 }
 
-.attacker-header {
-    background: linear-gradient(135deg, #ff4d4d 0%, #cc0000 100%);
+.card-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+    pointer-events: none;
+    animation: shimmer 3s infinite;
 }
 
-.defender-header {
-    background: linear-gradient(135deg, #66ff66 0%, #33cc33 100%);
+.card-header:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
 }
 
 .header-icon {
-    font-size: 24px;
+    font-size: 28px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    z-index: 1;
+    transition: transform 0.3s ease;
+}
+
+.card-header:hover .header-icon {
+    transform: scale(1.1);
 }
 
 .card-header h2 {
@@ -134,6 +306,102 @@ h1 {
     font-size: 24px;
     font-weight: bold;
     color: white;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    transition: all 0.3s ease;
+}
+
+.card-header:hover h2 {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* ========================================
+   BATTLE THEME
+   ======================================== */
+
+.attacker-header {
+    background: linear-gradient(135deg, #ff4d4d 0%, #cc0000 100%);
+    border-bottom: 3px solid #8B0000;
+}
+
+.defender-header {
+    background: linear-gradient(135deg, #66ff66 0%, #33cc33 100%);
+    border-bottom: 3px solid #228B22;
+}
+
+/* ========================================
+   KINGDOM MANAGEMENT THEME
+   ======================================== */
+
+.kingdom-header {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    border-bottom: 3px solid #654321;
+}
+
+.kingdom-header .header-icon {
+    color: #FFD700;
+}
+
+/* Terrain Header - Nature Theme */
+.terrain-header {
+    background: linear-gradient(135deg, #228B22 0%, #32CD32 100%);
+    border-bottom: 3px solid #006400;
+}
+
+.terrain-header .header-icon {
+    color: #90EE90;
+}
+
+/* Building Header - Stone/Castle Theme */
+.building-header {
+    background: linear-gradient(135deg, #696969 0%, #808080 100%);
+    border-bottom: 3px solid #2F4F4F;
+}
+
+.building-header .header-icon {
+    color: #FFD700;
+}
+
+/* ========================================
+   RESOURCE THEME
+   ======================================== */
+
+.resources-header {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    border-bottom: 3px solid #B8860B;
+}
+
+.resources-header .header-icon {
+    color: #8B4513;
+}
+
+/* ========================================
+   UNIT MANAGEMENT THEME
+   ======================================== */
+
+.unit-header {
+    background: linear-gradient(135deg, #DC143C 0%, #B22222 100%);
+    border-bottom: 3px solid #8B0000;
+}
+
+.unit-header .header-icon {
+    color: #FFD700;
+}
+
+/* Unit Recruitment Header - Military Theme */
+.unit-recruitment-header {
+    background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%);
+    border-bottom: 3px solid #191970;
+}
+
+.unit-recruitment-header .header-icon {
+    color: #87CEEB;
+}
+
+/* Legacy support */
+.unit-recruitment-header {
+    background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%);
+    border-bottom: 3px solid #191970;
 }
 
 .card-content {
@@ -143,29 +411,37 @@ h1 {
 /* Faction Selector */
 .faction-selector {
     margin-bottom: 25px;
+    text-align: center;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 1px solid #333;
 }
 
 .faction-selector label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
     font-weight: bold;
-    color: #ccc;
+    color: #ffd700;
+    font-size: 18px;
 }
 
 .faction-selector select {
     width: 100%;
-    padding: 12px;
+    padding: 12px 20px;
     border: 2px solid #444;
     border-radius: 8px;
     background: #1a1a1a;
     color: white;
     font-size: 16px;
-    transition: border-color 0.3s ease;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .faction-selector select:focus {
     border-color: #ffd700;
     outline: none;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 /* Units Section */
@@ -177,44 +453,64 @@ h1 {
     margin: 0 0 15px 0;
     color: #ffd700;
     font-size: 18px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #444;
 }
 
 .units-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #333;
 }
 
 .unit-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.05);
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
     border-radius: 8px;
-    border: 1px solid #333;
+    border: 1px solid #444;
+    transition: all 0.3s ease;
+}
+
+.unit-row:hover {
+    background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-color: #ffd700;
 }
 
 .unit-row label {
     font-weight: bold;
     color: #ccc;
     margin: 0;
+    flex: 1;
+    font-size: 16px;
 }
 
 .unit-row input {
-    width: 80px;
-    padding: 8px;
+    width: 100px;
+    padding: 10px;
     border: 2px solid #444;
     border-radius: 6px;
     background: #1a1a1a;
     color: white;
     text-align: center;
-    font-size: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
 }
 
 .unit-row input:focus {
     border-color: #ffd700;
     outline: none;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
 }
 
 /* Leader Section */
@@ -677,6 +973,18 @@ h1 {
 
 .defender-header {
     color: #66ff66;
+}
+
+.terrain-header {
+    color: #ffd700;
+}
+
+.building-header {
+    color: #c4aa19;
+}
+
+.resources-header {
+    color: #27b345;
 }
 
 label {
@@ -1215,4 +1523,596 @@ input[type="number"] {
 button:focus, a:focus, select:focus, input:focus {
     outline: 2px solid #ffd700;
     outline-offset: 2px;
+}
+
+/* Results Section Styles */
+.results-section {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    border: 1px solid #333;
+}
+
+.income-results,
+.expense-results {
+    color: white;
+}
+
+.income-results h4,
+.expense-results h4 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.income-grid,
+.expense-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.income-section,
+.expense-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.income-section h5,
+.expense-section h5 {
+    color: #87CEEB;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.total-section {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.total-section h5 {
+    color: #ffd700;
+}
+
+.income-item,
+.expense-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    padding: 5px 0;
+    border-bottom: 1px solid #444;
+}
+
+.income-item.total,
+.expense-item.total {
+    font-weight: bold;
+    color: #ffd700;
+    border-bottom: 2px solid #ffd700;
+}
+
+.unit-costs {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.unit-costs span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+/* Kingdom Results Styles */
+.kingdom-results {
+    color: white;
+}
+
+.kingdom-results h4 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.kingdom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.kingdom-section {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #444;
+}
+
+.kingdom-section h5 {
+    color: #87CEEB;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.total-section {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.total-section h5 {
+    color: #ffd700;
+}
+
+.terrain-breakdown,
+.building-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.terrain-item,
+.building-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    border: 1px solid #333;
+}
+
+.terrain-item strong,
+.building-item strong {
+    color: #ffd700;
+    font-size: 0.9em;
+}
+
+.terrain-costs,
+.building-costs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.terrain-costs span,
+.building-costs span {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+}
+
+.total-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 6px;
+    border: 1px solid #ffd700;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+@media (max-width: 768px) {
+    .kingdom-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .terrain-item,
+    .building-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .terrain-costs,
+    .building-costs {
+        justify-content: flex-start;
+    }
+}
+
+/* Round Income Breakdown Styles */
+.income-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.breakdown-section {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.breakdown-section h4 {
+    color: #87CEEB;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1em;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+}
+
+.total-breakdown {
+    border-color: #ffd700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.total-breakdown h4 {
+    color: #ffd700;
+    border-bottom-color: #ffd700;
+}
+
+.breakdown-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+}
+
+.breakdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    border: 1px solid #333;
+}
+
+.total-item {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: #ffd700;
+}
+
+.resource-icon {
+    font-size: 1.2em;
+    min-width: 20px;
+}
+
+.breakdown-label {
+    color: #ccc;
+    font-size: 0.9em;
+    flex: 1;
+}
+
+.breakdown-value {
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 1.1em;
+    min-width: 30px;
+    text-align: right;
+}
+
+.total-value {
+    color: #ffd700;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .breakdown-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .breakdown-item {
+        justify-content: space-between;
+    }
+}
+
+/* Round Counter Styles */
+.round-counter-section {
+    max-width: 1400px;
+    margin: 0 auto 20px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+}
+
+.round-counter-card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+    border: 2px solid #444;
+    border-radius: 15px;
+    padding: 20px 30px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.round-counter-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.05) 50%, transparent 70%);
+    pointer-events: none;
+    animation: shimmer 3s infinite;
+}
+
+.round-counter-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
+    border-color: #ffd700;
+}
+
+.round-counter-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    z-index: 1;
+    position: relative;
+}
+
+.round-counter-icon {
+    font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.round-counter-header h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.round-counter-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    z-index: 1;
+    position: relative;
+}
+
+.round-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #444 0%, #666 100%);
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.round-btn:hover {
+    background: linear-gradient(135deg, #555 0%, #777 100%);
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.round-btn:active {
+    transform: scale(0.95);
+}
+
+.round-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.round-display input {
+    width: 80px;
+    height: 50px;
+    border: 2px solid #444;
+    border-radius: 10px;
+    background: #1a1a1a;
+    color: white;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.round-display input:focus {
+    border-color: #ffd700;
+    outline: none;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.round-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ccc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Resource Pool Styles */
+.resource-pool-section {
+    max-width: 1400px;
+    margin: 0 auto 30px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.resources-card {
+    border: 2px solid #FFD700;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+.resource-pool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.resource-pool-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.resource-icon {
+    font-size: 20px;
+}
+
+.resource-pool-item label {
+    font-weight: bold;
+    color: #ffd700;
+    min-width: 60px;
+}
+
+.resource-pool-item input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #555;
+    border-radius: 5px;
+    background: #1a1a1a;
+    color: white;
+    font-size: 16px;
+}
+
+/* Recruitment Section Styles */
+.recruitment-section {
+    max-width: 1400px;
+    margin: 30px auto;
+}
+
+.recruitment-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.recruitment-unit-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    border-radius: 10px;
+    border: 1px solid #444;
+}
+
+.unit-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.unit-name {
+    font-weight: bold;
+    color: #ffd700;
+    font-size: 18px;
+}
+
+.unit-costs {
+    display: flex;
+    gap: 20px;
+}
+
+.cost-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.cost-icon {
+    font-size: 16px;
+}
+
+.cost-value {
+    font-weight: bold;
+    color: white;
+}
+
+.unit-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.unit-btn {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #444 0%, #666 100%);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.unit-btn:hover {
+    background: linear-gradient(135deg, #555 0%, #777 100%);
+    transform: scale(1.1);
+}
+
+.unit-quantity {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffd700;
+    min-width: 30px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .resource-pool-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recruitment-unit-row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .unit-costs {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .round-counter-card {
+        padding: 15px 20px;
+    }
+
+    .round-counter-controls {
+        gap: 15px;
+    }
+
+    .round-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+
+    .round-display input {
+        width: 70px;
+        height: 45px;
+        font-size: 20px;
+    }
 }

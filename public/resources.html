@@ -18,21 +18,51 @@
 
     <!-- Navigation Card -->
     <div class="nav-card">
-        <a href="index.html" class="factions-btn">
+        <a href="index.html" class="nav-btn battle-btn">
             <span class="btn-icon">⚔️</span>
             <span class="btn-text">Battle Calculator</span>
         </a>
-        <a href="factions.html" class="character-btn">
+        <a href="factions.html" class="nav-btn factions-btn">
             <span class="btn-icon">📋</span>
-            <span class="btn-text">View Faction Details</span>
+            <span class="btn-text">Faction Details</span>
         </a>
+        <a href="login.html" class="nav-btn login-btn">
+            <span class="btn-icon">👤</span>
+            <span class="btn-text">Character Creation</span>
+        </a>
+        <a href="character.html" class="nav-btn character-btn">
+            <span class="btn-icon">⚔️</span>
+            <span class="btn-text">My Characters</span>
+        </a>
+    </div>
+
+    <!-- Round Counter Section -->
+    <div class="round-counter-section">
+        <div class="round-counter-card">
+            <div class="round-counter-header">
+                <span class="round-counter-icon">🎯</span>
+                <h3>Current Round</h3>
+            </div>
+            <div class="round-counter-controls">
+                <button class="round-btn" onclick="decreaseRound()" title="Previous Round">
+                    <span>−</span>
+                </button>
+                <div class="round-display">
+                    <input type="number" id="currentRound" min="1" value="1" onchange="updateRound()">
+                    <span class="round-label">Round</span>
+                </div>
+                <button class="round-btn" onclick="increaseRound()" title="Next Round">
+                    <span>+</span>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- Resource Pool Section -->
     <div class="resource-pool-section">
-        <div class="army-card">
-            <div class="card-header attacker-header">
-                <span class="header-icon">💰</span>
+        <div class="army-card resources-card">
+            <div class="card-header resources-header">
+                <span class="header-icon">💎</span>
                 <h2>Resource Pool</h2>
             </div>
             <div class="card-content">
@@ -64,117 +94,249 @@
 
     <!-- Main Resource Calculator Container -->
     <div class="calculator-container">
-        
-        <!-- Faction Selector -->
-        <div class="army-card">
-            <div class="card-header attacker-header">
-                <span class="header-icon">⚔️</span>
-                <h2>Faction Selection</h2>
+        <!-- KINGDOM MANAGEMENT -->
+        <div class="army-card kingdom-card">
+            <div class="card-header kingdom-header">
+                <span class="header-icon">👑</span>
+                <h2>Kingdom Management</h2>
             </div>
-            <div class="card-content">
-                <div class="faction-selector">
-                    <label for="resourceFaction">Faction:</label>
-                    <select id="resourceFaction">
-                        <option value="Empire">Empire</option>
-                        <option value="Raiders">Raiders</option>
-                        <option value="HORDE">HORDE</option>
-                        <option value="Ironborne">Ironborne</option>
-                        <option value="Vanguard">Vanguard</option>
-                        <option value="Damned">Damned</option>
-                    </select>
+  
+            <!-- Terrain Section -->
+            <div class="army-card terrain-card">
+                <div class="card-header terrain-header">
+                    <span class="header-icon">🌿</span>
+                    <h2>Terrain Claimed</h2>
                 </div>
-            </div>
-        </div>
-        
-        <!-- Terrain Section -->
-        <div class="army-card attacker-card">
-            <div class="card-header attacker-header">
-                <span class="header-icon">🌲</span>
-                <h2>Terrain Holdings</h2>
-            </div>
-            <div class="card-content">
-                <div class="units-section">
-                    <h3>Terrain Types</h3>
-                    <div class="units-grid">
-                        <div class="unit-row">
-                            <label for="plains">Plains:</label>
-                            <input type="number" id="plains" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="forest">Forest:</label>
-                            <input type="number" id="forest" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="hills">Hills:</label>
-                            <input type="number" id="hills" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="sea">Sea:</label>
-                            <input type="number" id="sea" min="0" value="0" placeholder="0">
+                <div class="card-content">
+                    <div class="units-section">
+                        <h3>Terrain Types</h3>
+                        <div class="units-grid">
+                            <div class="unit-row">
+                                <label for="plains">Plains:</label>
+                                <input type="number" id="plains" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="forest">Forest:</label>
+                                <input type="number" id="forest" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="hills">Hills:</label>
+                                <input type="number" id="hills" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="sea">Sea:</label>
+                                <input type="number" id="sea" min="0" value="0" placeholder="0">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Building Section -->
-        <div class="army-card defender-card">
-            <div class="card-header defender-header">
-                <span class="header-icon">🏰</span>
-                <h2>Building Holdings</h2>
-            </div>
-            <div class="card-content">
-                <div class="units-section">
-                    <h3>Building Types</h3>
-                    <div class="units-grid">
-                        <div class="unit-row">
-                            <label for="castle">Castle:</label>
-                            <input type="number" id="castle" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="outpost">Outpost:</label>
-                            <input type="number" id="outpost" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="harbor">Harbor:</label>
-                            <input type="number" id="harbor" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="bloodshrine">Bloodshrine:</label>
-                            <input type="number" id="bloodshrine" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="mine">Mine:</label>
-                            <input type="number" id="mine" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="fishery">Fishery:</label>
-                            <input type="number" id="fishery" min="0" value="0" placeholder="0">
-                        </div>
-                        <div class="unit-row">
-                            <label for="breeding_den">Breeding Den:</label>
-                            <input type="number" id="breeding_den" min="0" value="0" placeholder="0">
+            <!-- Building Section -->
+            <div class="army-card building-card">
+                <div class="card-header building-header">
+                    <span class="header-icon">🏗️</span>
+                    <h2>Building Holdings</h2>
+                </div>
+                <div class="card-content">
+                    <div class="units-section">
+                        <h3>Building Types</h3>
+                        <div class="units-grid">
+                            <div class="unit-row">
+                                <label for="castle">Castle:</label>
+                                <input type="number" id="castle" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="outpost">Outpost:</label>
+                                <input type="number" id="outpost" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="harbor">Harbor:</label>
+                                <input type="number" id="harbor" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="bloodshrine">Bloodshrine:</label>
+                                <input type="number" id="bloodshrine" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="mine">Mine:</label>
+                                <input type="number" id="mine" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="fishery">Fishery:</label>
+                                <input type="number" id="fishery" min="0" value="0" placeholder="0">
+                            </div>
+                            <div class="unit-row">
+                                <label for="breeding_den">Breeding Den:</label>
+                                <input type="number" id="breeding_den" min="0" value="0" placeholder="0">
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Action Buttons -->
-    <div class="action-buttons">
-        <button class="clear-btn" onclick="clearAllInputs()">
-            <span class="btn-icon">🗑️</span>
-            Clear All
-        </button>
-        <button class="calculate-btn" onclick="calculateResources()">
-            <span class="btn-icon">💰</span>
-            Calculate Resources
-        </button>
-        <button class="calculate-btn" onclick="sendToResourcePool()">
-            <span class="btn-icon">📥</span>
-            Send to Resource Pool
-        </button>
+            <!-- Round Income Section -->
+            <div id="roundIncomeSection" class="army-card recruitment-card" style="display: none;">
+                <div class="card-header resources-header">
+                    <span class="header-icon">📈</span>
+                    <h2>Round Income</h2>
+                </div>
+                <div class="card-content">
+                    <div class="units-section">
+                        <h3>Round Income Breakdown</h3>
+                        <div id="roundIncomeBreakdown" class="income-breakdown">
+                            <div class="breakdown-section">
+                                <h4>Terrain Income</h4>
+                                <div class="breakdown-grid">
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">🍖</span>
+                                        <span class="breakdown-label">Food:</span>
+                                        <span class="breakdown-value" id="terrainFoodIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">💰</span>
+                                        <span class="breakdown-label">Gold:</span>
+                                        <span class="breakdown-value" id="terrainGoldIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">⚒️</span>
+                                        <span class="breakdown-label">Iron:</span>
+                                        <span class="breakdown-value" id="terrainIronIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">📦</span>
+                                        <span class="breakdown-label">Other:</span>
+                                        <span class="breakdown-value" id="terrainOtherIncome">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-section">
+                                <h4>Building Income</h4>
+                                <div class="breakdown-grid">
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">🍖</span>
+                                        <span class="breakdown-label">Food:</span>
+                                        <span class="breakdown-value" id="buildingFoodIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">💰</span>
+                                        <span class="breakdown-label">Gold:</span>
+                                        <span class="breakdown-value" id="buildingGoldIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">⚒️</span>
+                                        <span class="breakdown-label">Iron:</span>
+                                        <span class="breakdown-value" id="buildingIronIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item">
+                                        <span class="resource-icon">📦</span>
+                                        <span class="breakdown-label">Other:</span>
+                                        <span class="breakdown-value" id="buildingOtherIncome">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="breakdown-section total-breakdown">
+                                <h4>Total Round Income</h4>
+                                <div class="breakdown-grid">
+                                    <div class="breakdown-item total-item">
+                                        <span class="resource-icon">🍖</span>
+                                        <span class="breakdown-label">Food:</span>
+                                        <span class="breakdown-value total-value" id="totalFoodIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item total-item">
+                                        <span class="resource-icon">💰</span>
+                                        <span class="breakdown-label">Gold:</span>
+                                        <span class="breakdown-value total-value" id="totalGoldIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item total-item">
+                                        <span class="resource-icon">⚒️</span>
+                                        <span class="breakdown-label">Iron:</span>
+                                        <span class="breakdown-value total-value" id="totalIronIncome">0</span>
+                                    </div>
+                                    <div class="breakdown-item total-item">
+                                        <span class="resource-icon">📦</span>
+                                        <span class="breakdown-label">Other:</span>
+                                        <span class="breakdown-value total-value" id="totalOtherIncome">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="clear-btn" onclick="clearAllIncomeInputs()">
+                    <span class="btn-icon">🗑️</span>
+                    Clear All Income
+                </button>
+                <button class="calculate-btn" onclick="calculateResourceIncome()">
+                    <span class="btn-icon">💰</span>
+                    Calculate Resource Income
+                </button>
+                <button class="calculate-btn" onclick="sendResourceIncomeToPool()">
+                    <span class="btn-icon">📥</span>
+                    Send Resource Income to Pool
+                </button>
+            </div>
+            
+            <!-- Kingdom Results -->
+            <div id="kingdomResults" class="results-section"></div>
+        </div>
+
+        <!-- UNIT MANAGEMENT -->
+        <div class="army-card unit-card">
+            <div class="card-header unit-header">
+                <span class="header-icon">🛡️</span>
+                <h2>Unit Management</h2>
+            </div>
+
+            <!-- Unit Recruitment Section -->
+            <div class="army-card unit-recruitment-card">
+                <div class="card-header unit-recruitment-header">
+                    <span class="header-icon">⚔️</span>
+                    <h2>Unit Recruitment</h2>
+                </div>
+                <div class="card-content">
+                    <div class="faction-selector">
+                        <label for="recruitmentFaction">Faction:</label>
+                        <select id="recruitmentFaction" onchange="updateRecruitmentUnits()">
+                            <option value="Empire">Empire</option>
+                            <option value="Raiders">Raiders</option>
+                            <option value="HORDE">HORDE</option>
+                            <option value="Ironborne">Ironborne</option>
+                            <option value="Vanguard">Vanguard</option>
+                            <option value="Damned">Damned</option>
+                        </select>
+                    </div>
+                    <div class="units-section">
+                        <h3>Available Units</h3>
+                        <div id="recruitmentUnits" class="recruitment-grid"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="clear-btn" onclick="clearAllExpensesInputs()">
+                    <span class="btn-icon">🗑️</span>
+                    Clear All Expenses
+                </button>
+                <button class="calculate-btn" onclick="calculateUnitExpenses()">
+                    <span class="btn-icon">💰</span>
+                    Calculate Unit Expenses
+                </button>
+                <button class="calculate-btn" onclick="takeUnitExpensesFromPool()">
+                    <span class="btn-icon">📥</span>
+                    Take Unit Expenses from Pool
+                </button>
+            </div>
+            
+            <!-- Expense Results -->
+            <div id="expenseResults" class="results-section"></div>
+        </div>
     </div>
 
     <!-- Results Section -->
@@ -189,32 +351,6 @@
         </div>
     </div>
 
-    <!-- Unit Recruitment Section -->
-    <div class="recruitment-section">
-        <div class="army-card">
-            <div class="card-header supporters-header">
-                <span class="header-icon">⚔️</span>
-                <h2>Unit Recruitment</h2>
-            </div>
-            <div class="card-content">
-                <div class="faction-selector">
-                    <label for="recruitmentFaction">Faction:</label>
-                    <select id="recruitmentFaction" onchange="updateRecruitmentUnits()">
-                        <option value="Empire">Empire</option>
-                        <option value="Raiders">Raiders</option>
-                        <option value="HORDE">HORDE</option>
-                        <option value="Ironborne">Ironborne</option>
-                        <option value="Vanguard">Vanguard</option>
-                        <option value="Damned">Damned</option>
-                    </select>
-                </div>
-                <div class="units-section">
-                    <h3>Available Units</h3>
-                    <div id="recruitmentUnits" class="recruitment-grid"></div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Notification -->
     <div id="notification" class="notification"></div>
@@ -353,9 +489,6 @@
         }
 
         function calculateResources() {
-            // Collect faction
-            const faction = document.getElementById('resourceFaction').value;
-            
             // Collect terrain data
             const terrainData = {
                 plains: parseInt(document.getElementById('plains').value) || 0,
@@ -377,7 +510,6 @@
             
             // Prepare data for server
             const requestData = {
-                faction: faction,
                 terrain: terrainData,
                 buildings: buildingData
             };
@@ -421,17 +553,17 @@
             const poolIron = parseInt(document.getElementById('poolIron').value) || 0;
             const poolOther = parseInt(document.getElementById('poolOther').value) || 0;
 
-            // Get calculated results from the displayed results
+            // Get calculated results (this would normally come from the server response)
+            // For now, we'll simulate this with the displayed results
             const foodResult = document.querySelector('.resource-item:nth-child(1) .resource-value')?.textContent || '0';
             const goldResult = document.querySelector('.resource-item:nth-child(2) .resource-value')?.textContent || '0';
             const ironResult = document.querySelector('.resource-item:nth-child(3) .resource-value')?.textContent || '0';
-            const otherResult = document.querySelector('.resource-item:nth-child(4) .resource-value')?.textContent || '0';
 
             // Add calculated resources to pool
             document.getElementById('poolFood').value = poolFood + parseInt(foodResult);
             document.getElementById('poolGold').value = poolGold + parseInt(goldResult);
             document.getElementById('poolIron').value = poolIron + parseInt(ironResult);
-            document.getElementById('poolOther').value = poolOther + parseInt(otherResult);
+            // Note: Other resource calculation would be added here when implemented
 
             showNotification('Resources added to pool!', 'success');
         }
@@ -464,13 +596,6 @@
                 </div>`;
             }
             
-            if (results.other !== undefined) {
-                html += `<div class="resource-item">
-                    <span class="resource-label">Other:</span>
-                    <span class="resource-value">${results.other}</span>
-                </div>`;
-            }
-            
             html += '</div>';
             
             resultsDiv.innerHTML = html;
@@ -487,181 +612,504 @@
             }, 3000);
         }
 
+        // Round Income Display Functions
+        function updateRoundIncomeDisplay() {
+            // Get terrain data
+            const terrainData = {
+                plains: parseInt(document.getElementById('plains').value) || 0,
+                forest: parseInt(document.getElementById('forest').value) || 0,
+                hills: parseInt(document.getElementById('hills').value) || 0,
+                sea: parseInt(document.getElementById('sea').value) || 0
+            };
+            
+            // Get building data
+            const buildingData = {
+                outposts: parseInt(document.getElementById('outpost').value) || 0,
+                ports: parseInt(document.getElementById('harbor').value) || 0,
+                castles: parseInt(document.getElementById('castle').value) || 0,
+                bloodshrines: parseInt(document.getElementById('bloodshrine').value) || 0,
+                mines: parseInt(document.getElementById('mine').value) || 0,
+                fisheries: parseInt(document.getElementById('fishery').value) || 0,
+                breeding_dens: parseInt(document.getElementById('breeding_den').value) || 0
+            };
+            
+            // Calculate terrain income (WORKING) HOW DO MATH?
+            const terrainIncome = {
+                food: (terrainData.plains * 1) + (terrainData.sea * 0),
+                gold: terrainData.hills * 3,
+                iron: terrainData.hills * 3,
+                other: terrainData.sea * 0
+            };
+            
+            // Calculate building income (WORKING) HOW DO MATH?
+            const buildingIncome = {
+                food: (buildingData.castle * 5) + (buildingData.fisheries * 1), 
+                gold: (buildingData.castle * 4) + (buildingData.mine * 2),
+                iron: (buildingData.castle * 4) + (buildingData.mine * 2),
+                other: buildingData.harbor * 0
+            };
+            
+            // Total round income
+            const totalRoundIncome = {
+                food: terrainIncome.food + buildingIncome.food,
+                gold: terrainIncome.gold + buildingIncome.gold,
+                iron: terrainIncome.iron + buildingIncome.iron,
+                other: terrainIncome.other + buildingIncome.other
+            };
+            
+            // Update terrain income display
+            document.getElementById('terrainFoodIncome').textContent = terrainIncome.food;
+            document.getElementById('terrainGoldIncome').textContent = terrainIncome.gold;
+            document.getElementById('terrainIronIncome').textContent = terrainIncome.iron;
+            document.getElementById('terrainOtherIncome').textContent = terrainIncome.other;
+            
+            // Update building income display
+            document.getElementById('buildingFoodIncome').textContent = buildingIncome.food;
+            document.getElementById('buildingGoldIncome').textContent = buildingIncome.gold;
+            document.getElementById('buildingIronIncome').textContent = buildingIncome.iron;
+            document.getElementById('buildingOtherIncome').textContent = buildingIncome.other;
+            
+            // Update total income display
+            document.getElementById('totalFoodIncome').textContent = totalRoundIncome.food;
+            document.getElementById('totalGoldIncome').textContent = totalRoundIncome.gold;
+            document.getElementById('totalIronIncome').textContent = totalRoundIncome.iron;
+            document.getElementById('totalOtherIncome').textContent = totalRoundIncome.other;
+        }
+
+        // Income Calculation Functions
+        function clearAllIncomeInputs() {
+            // Clear terrain inputs
+            const terrainInputs = ['plains', 'forest', 'hills', 'sea'];
+            terrainInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.value = '0';
+            });
+            
+            // Clear building inputs
+            const buildingInputs = ['outposts', 'ports', 'castles'];
+            buildingInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) input.value = '0';
+            });
+            
+            // Hide the kingdom results
+            const kingdomResultsDiv = document.getElementById('kingdomResults');
+            if (kingdomResultsDiv) {
+                kingdomResultsDiv.innerHTML = '';
+            }
+            
+            // Hide the round income section
+            const roundIncomeSection = document.getElementById('roundIncomeSection');
+            if (roundIncomeSection) {
+                roundIncomeSection.style.display = 'none';
+            }
+            
+            // Update round income display
+            updateRoundIncomeDisplay();
+            
+            showNotification('All income inputs cleared!', 'success');
+        }
+        
+        function calculateResourceIncome() {
+            // Get terrain data
+            const terrainData = {
+                plains: parseInt(document.getElementById('plains').value) || 0,
+                forest: parseInt(document.getElementById('forest').value) || 0,
+                hills: parseInt(document.getElementById('hills').value) || 0,
+                sea: parseInt(document.getElementById('sea').value) || 0
+            };
+            
+            // Get building data
+            const buildingData = {
+                outposts: parseInt(document.getElementById('outposts').value) || 0,
+                ports: parseInt(document.getElementById('ports').value) || 0,
+                castles: parseInt(document.getElementById('castles').value) || 0
+            };
+            
+            // Calculate terrain income (example rates)
+            const terrainIncome = {
+                food: (terrainData.plains * 2) + (terrainData.forest * 1) + (terrainData.hills * 1),
+                gold: (terrainData.plains * 1) + (terrainData.forest * 2) + (terrainData.hills * 3) + (terrainData.sea * 1),
+                iron: (terrainData.hills * 2) + (terrainData.forest * 1),
+                other: terrainData.sea * 1
+            };
+            
+            // Calculate building income (example rates)
+            const buildingIncome = {
+                food: buildingData.outposts * 1,
+                gold: (buildingData.outposts * 2) + (buildingData.ports * 3) + (buildingData.castles * 5),
+                iron: (buildingData.outposts * 1) + (buildingData.castles * 2),
+                other: buildingData.ports * 1
+            };
+            
+            // Calculate round income from terrain and buildings
+            const roundIncomeData = {
+                food: terrainIncome.food + buildingIncome.food,
+                gold: terrainIncome.gold + buildingIncome.gold,
+                iron: terrainIncome.iron + buildingIncome.iron,
+                other: terrainIncome.other + buildingIncome.other
+            };
+            
+            // Total income (roundIncomeData is already terrain + building)
+            const totalIncome = {
+                food: roundIncomeData.food,
+                gold: roundIncomeData.gold,
+                iron: roundIncomeData.iron,
+                other: roundIncomeData.other
+            };
+            
+            // Show the round income section
+            const roundIncomeSection = document.getElementById('roundIncomeSection');
+            if (roundIncomeSection) {
+                roundIncomeSection.style.display = 'block';
+            }
+            
+            // Display results in Kingdom Management style
+            displayKingdomResults(terrainIncome, buildingIncome, roundIncomeData, totalIncome);
+            
+            showNotification('Resource income calculated!', 'success');
+        }
+        
+        function sendResourceIncomeToPool() {
+            // Get current pool values
+            const poolFood = parseInt(document.getElementById('poolFood').value) || 0;
+            const poolGold = parseInt(document.getElementById('poolGold').value) || 0;
+            const poolIron = parseInt(document.getElementById('poolIron').value) || 0;
+            const poolOther = parseInt(document.getElementById('poolOther').value) || 0;
+            
+            // Get calculated income (this would need to be stored from previous calculation)
+            const incomeResults = document.getElementById('incomeResults');
+            if (!incomeResults || incomeResults.innerHTML === '') {
+                showNotification('Please calculate resource income first!', 'error');
+                return;
+            }
+            
+            // For now, we'll use a simple calculation
+            // In a real implementation, you'd store the calculated values
+            const terrainData = {
+                plains: parseInt(document.getElementById('plains').value) || 0,
+                forest: parseInt(document.getElementById('forest').value) || 0,
+                hills: parseInt(document.getElementById('hills').value) || 0,
+                sea: parseInt(document.getElementById('sea').value) || 0
+            };
+            
+            const buildingData = {
+                outposts: parseInt(document.getElementById('outposts').value) || 0,
+                ports: parseInt(document.getElementById('ports').value) || 0,
+                castles: parseInt(document.getElementById('castles').value) || 0
+            };
+            
+            // Calculate income
+            const terrainIncome = {
+                food: (terrainData.plains * 2) + (terrainData.forest * 1) + (terrainData.hills * 1),
+                gold: (terrainData.plains * 1) + (terrainData.forest * 2) + (terrainData.hills * 3) + (terrainData.sea * 1),
+                iron: (terrainData.hills * 2) + (terrainData.forest * 1),
+                other: terrainData.sea * 1
+            };
+            
+            const buildingIncome = {
+                food: buildingData.outposts * 1,
+                gold: (buildingData.outposts * 2) + (buildingData.ports * 3) + (buildingData.castles * 5),
+                iron: (buildingData.outposts * 1) + (buildingData.castles * 2),
+                other: buildingData.ports * 1
+            };
+            
+            // Calculate round income from terrain and buildings
+            const roundIncomeData = {
+                food: terrainIncome.food + buildingIncome.food,
+                gold: terrainIncome.gold + buildingIncome.gold,
+                iron: terrainIncome.iron + buildingIncome.iron,
+                other: terrainIncome.other + buildingIncome.other
+            };
+            
+            const totalIncome = {
+                food: roundIncomeData.food,
+                gold: roundIncomeData.gold,
+                iron: roundIncomeData.iron,
+                other: roundIncomeData.other
+            };
+            
+            // Add to pool
+            document.getElementById('poolFood').value = poolFood + totalIncome.food;
+            document.getElementById('poolGold').value = poolGold + totalIncome.gold;
+            document.getElementById('poolIron').value = poolIron + totalIncome.iron;
+            document.getElementById('poolOther').value = poolOther + totalIncome.other;
+            
+            showNotification(`Added ${totalIncome.food} food, ${totalIncome.gold} gold, ${totalIncome.iron} iron, ${totalIncome.other} other to resource pool!`, 'success');
+        }
+        
+        function displayKingdomResults(terrainIncome, buildingIncome, roundIncome, totalIncome) {
+            const resultsDiv = document.getElementById('kingdomResults');
+            if (!resultsDiv) return;
+            
+            let html = `
+                <div class="kingdom-results">
+                    <h4>Kingdom Income Breakdown</h4>
+                    <div class="kingdom-grid">
+                        <div class="kingdom-section">
+                            <h5>Terrain Sources</h5>
+                            <div class="terrain-breakdown">
+                                <div class="terrain-item">
+                                    <strong>Plains</strong>
+                                    <div class="terrain-costs">
+                                        <span>🍖 ${terrainIncome.food}</span>
+                                        <span>💰 ${terrainIncome.gold}</span>
+                                    </div>
+                                </div>
+                                <div class="terrain-item">
+                                    <strong>Forest</strong>
+                                    <div class="terrain-costs">
+                                        <span>🍖 ${terrainIncome.food}</span>
+                                        <span>💰 ${terrainIncome.gold}</span>
+                                        <span>⚒️ ${terrainIncome.iron}</span>
+                                    </div>
+                                </div>
+                                <div class="terrain-item">
+                                    <strong>Hills</strong>
+                                    <div class="terrain-costs">
+                                        <span>🍖 ${terrainIncome.food}</span>
+                                        <span>💰 ${terrainIncome.gold}</span>
+                                        <span>⚒️ ${terrainIncome.iron}</span>
+                                    </div>
+                                </div>
+                                <div class="terrain-item">
+                                    <strong>Sea</strong>
+                                    <div class="terrain-costs">
+                                        <span>💰 ${terrainIncome.gold}</span>
+                                        <span>📦 ${terrainIncome.other}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kingdom-section">
+                            <h5>Building Sources</h5>
+                            <div class="building-breakdown">
+                                <div class="building-item">
+                                    <strong>Outposts</strong>
+                                    <div class="building-costs">
+                                        <span>🍖 ${buildingIncome.food}</span>
+                                        <span>💰 ${buildingIncome.gold}</span>
+                                        <span>⚒️ ${buildingIncome.iron}</span>
+                                    </div>
+                                </div>
+                                <div class="building-item">
+                                    <strong>Ports</strong>
+                                    <div class="building-costs">
+                                        <span>💰 ${buildingIncome.gold}</span>
+                                        <span>📦 ${buildingIncome.other}</span>
+                                    </div>
+                                </div>
+                                <div class="building-item">
+                                    <strong>Castles</strong>
+                                    <div class="building-costs">
+                                        <span>💰 ${buildingIncome.gold}</span>
+                                        <span>⚒️ ${buildingIncome.iron}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="kingdom-section total-section">
+                            <h5>Total Kingdom Income</h5>
+                            <div class="total-breakdown">
+                                <div class="total-item">🍖 Food: ${totalIncome.food}</div>
+                                <div class="total-item">💰 Gold: ${totalIncome.gold}</div>
+                                <div class="total-item">⚒️ Iron: ${totalIncome.iron}</div>
+                                <div class="total-item">📦 Other: ${totalIncome.other}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // Expense Calculation Functions
+        function clearAllExpensesInputs() {
+            // Clear all unit quantity inputs
+            const unitQuantities = document.querySelectorAll('.unit-quantity');
+            unitQuantities.forEach(quantity => {
+                quantity.textContent = '0';
+            });
+            
+            showNotification('All expense inputs cleared!', 'success');
+        }
+        
+        function calculateUnitExpenses() {
+            const faction = document.getElementById('recruitmentFaction').value;
+            const units = factionUnits[faction] || [];
+            
+            let totalExpenses = {
+                food: 0,
+                gold: 0,
+                iron: 0,
+                other: 0
+            };
+            
+            let unitBreakdown = [];
+            
+            units.forEach(unit => {
+                const quantity = parseInt(document.getElementById(`quantity_${unit.name}`).textContent) || 0;
+                if (quantity > 0) {
+                    const unitExpense = {
+                        name: unit.name,
+                        quantity: quantity,
+                        food: unit.food * quantity,
+                        gold: unit.gold * quantity,
+                        iron: unit.iron * quantity,
+                        other: unit.thrall_egg_fae * quantity
+                    };
+                    
+                    unitBreakdown.push(unitExpense);
+                    
+                    totalExpenses.food += unitExpense.food;
+                    totalExpenses.gold += unitExpense.gold;
+                    totalExpenses.iron += unitExpense.iron;
+                    totalExpenses.other += unitExpense.other;
+                }
+            });
+            
+            // Display results
+            displayExpenseResults(unitBreakdown, totalExpenses);
+            
+            showNotification('Unit expenses calculated!', 'success');
+        }
+        
+        function takeUnitExpensesFromPool() {
+            // Get current pool values
+            const poolFood = parseInt(document.getElementById('poolFood').value) || 0;
+            const poolGold = parseInt(document.getElementById('poolGold').value) || 0;
+            const poolIron = parseInt(document.getElementById('poolIron').value) || 0;
+            const poolOther = parseInt(document.getElementById('poolOther').value) || 0;
+            
+            // Calculate expenses
+            const faction = document.getElementById('recruitmentFaction').value;
+            const units = factionUnits[faction] || [];
+            
+            let totalExpenses = {
+                food: 0,
+                gold: 0,
+                iron: 0,
+                other: 0
+            };
+            
+            units.forEach(unit => {
+                const quantity = parseInt(document.getElementById(`quantity_${unit.name}`).textContent) || 0;
+                if (quantity > 0) {
+                    totalExpenses.food += unit.food * quantity;
+                    totalExpenses.gold += unit.gold * quantity;
+                    totalExpenses.iron += unit.iron * quantity;
+                    totalExpenses.other += unit.thrall_egg_fae * quantity;
+                }
+            });
+            
+            // Check if pool has enough resources
+            if (poolFood < totalExpenses.food || poolGold < totalExpenses.gold || 
+                poolIron < totalExpenses.iron || poolOther < totalExpenses.other) {
+                showNotification('Not enough resources in pool!', 'error');
+                return;
+            }
+            
+            // Deduct from pool
+            document.getElementById('poolFood').value = poolFood - totalExpenses.food;
+            document.getElementById('poolGold').value = poolGold - totalExpenses.gold;
+            document.getElementById('poolIron').value = poolIron - totalExpenses.iron;
+            document.getElementById('poolOther').value = poolOther - totalExpenses.other;
+            
+            showNotification(`Deducted ${totalExpenses.food} food, ${totalExpenses.gold} gold, ${totalExpenses.iron} iron, ${totalExpenses.other} other from resource pool!`, 'success');
+        }
+        
+        function displayExpenseResults(unitBreakdown, totalExpenses) {
+            const resultsDiv = document.getElementById('expenseResults');
+            if (!resultsDiv) return;
+            
+            let html = `
+                <div class="expense-results">
+                    <h4>Unit Expenses Breakdown</h4>
+                    <div class="expense-grid">
+                        <div class="expense-section">
+                            <h5>Unit Costs</h5>
+            `;
+            
+            unitBreakdown.forEach(unit => {
+                html += `
+                    <div class="expense-item">
+                        <strong>${unit.name} (${unit.quantity})</strong>
+                        <div class="unit-costs">
+                            <span>🍖 ${unit.food}</span>
+                            <span>💰 ${unit.gold}</span>
+                            <span>⚒️ ${unit.iron}</span>
+                            <span>📦 ${unit.other}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        </div>
+                        <div class="expense-section total-section">
+                            <h5>Total Expenses</h5>
+                            <div class="expense-item total">🍖 Food: ${totalExpenses.food}</div>
+                            <div class="expense-item total">💰 Gold: ${totalExpenses.gold}</div>
+                            <div class="expense-item total">⚒️ Iron: ${totalExpenses.iron}</div>
+                            <div class="expense-item total">📦 Other: ${totalExpenses.other}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            resultsDiv.innerHTML = html;
+        }
+
+        // Round Counter Functions
+        function increaseRound() {
+            const roundInput = document.getElementById('currentRound');
+            const currentRound = parseInt(roundInput.value) || 1;
+            roundInput.value = currentRound + 1;
+            updateRound();
+        }
+
+        function decreaseRound() {
+            const roundInput = document.getElementById('currentRound');
+            const currentRound = parseInt(roundInput.value) || 1;
+            if (currentRound > 1) {
+                roundInput.value = currentRound - 1;
+                updateRound();
+            }
+        }
+
+        function updateRound() {
+            const roundInput = document.getElementById('currentRound');
+            const currentRound = parseInt(roundInput.value) || 1;
+            
+            // Ensure minimum round is 1
+            if (currentRound < 1) {
+                roundInput.value = 1;
+            }
+            
+            // You can add additional logic here for round-specific functionality
+            console.log('Current round:', roundInput.value);
+        }
+
         // Initialize recruitment units on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateRecruitmentUnits();
+            updateRoundIncomeDisplay();
+            
+            // Add event listeners to terrain and building inputs to update Round Income display
+            const terrainInputs = ['plains', 'forest', 'hills', 'sea'];
+            const buildingInputs = ['outposts', 'ports', 'castles'];
+            
+            [...terrainInputs, ...buildingInputs].forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', updateRoundIncomeDisplay);
+                    input.addEventListener('change', updateRoundIncomeDisplay);
+                }
+            });
         });
     </script>
 
-    <style>
-        .resource-pool-section {
-            max-width: 1200px;
-            margin: 0 auto 30px auto;
-        }
-
-        .resource-pool-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .resource-pool-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px;
-            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
-            border-radius: 10px;
-            border: 1px solid #444;
-        }
-
-        .resource-icon {
-            font-size: 20px;
-        }
-
-        .resource-pool-item label {
-            font-weight: bold;
-            color: #ffd700;
-            min-width: 60px;
-        }
-
-        .resource-pool-item input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #555;
-            border-radius: 5px;
-            background: #1a1a1a;
-            color: white;
-            font-size: 16px;
-        }
-
-        .recruitment-section {
-            max-width: 1200px;
-            margin: 30px auto;
-        }
-
-        .recruitment-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .recruitment-unit-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
-            border-radius: 10px;
-            border: 1px solid #444;
-        }
-
-        .unit-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            flex: 1;
-        }
-
-        .unit-name {
-            font-weight: bold;
-            color: #ffd700;
-            font-size: 18px;
-        }
-
-        .unit-costs {
-            display: flex;
-            gap: 20px;
-        }
-
-        .cost-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .cost-icon {
-            font-size: 16px;
-        }
-
-        .cost-value {
-            font-weight: bold;
-            color: white;
-        }
-
-        .unit-controls {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .unit-btn {
-            width: 30px;
-            height: 30px;
-            border: none;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #444 0%, #666 100%);
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .unit-btn:hover {
-            background: linear-gradient(135deg, #555 0%, #777 100%);
-            transform: scale(1.1);
-        }
-
-        .unit-quantity {
-            font-size: 18px;
-            font-weight: bold;
-            color: #ffd700;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .faction-selector {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .faction-selector label {
-            font-weight: bold;
-            color: #ffd700;
-            min-width: 80px;
-        }
-
-        .faction-selector select {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid #555;
-            border-radius: 5px;
-            background: #1a1a1a;
-            color: white;
-            font-size: 16px;
-        }
-
-        @media (max-width: 768px) {
-            .resource-pool-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .recruitment-unit-row {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .unit-costs {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-        }
-    </style>
 </body>
 
 </html> 

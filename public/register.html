@@ -3,18 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fantasy Quest - Register</title>
+    <title>HEX Wars - Register</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .auth-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
-            background: linear-gradient(135deg, #2a5298 0%, #1e3a5f 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
         
         .auth-header {
             text-align: center;
@@ -142,11 +133,45 @@
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>⚔️ Fantasy Quest</h1>
-            <p>Create your account to begin your adventure</p>
-        </div>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="static/images/logo.jpg" alt="HEX Wars Logo" class="logo-image" />
+    </div>
+
+    <h1>HEX WARS - REGISTER</h1>
+    
+    <!-- Navigation Card -->
+    <div class="nav-card">
+        <a href="index.html" class="nav-btn battle-btn">
+            <span class="btn-icon">⚔️</span>
+            <span class="btn-text">Battle Calculator</span>
+        </a>
+        <a href="factions.html" class="nav-btn factions-btn">
+            <span class="btn-icon">📋</span>
+            <span class="btn-text">View Faction Details</span>
+        </a>
+        <a href="resources.html" class="nav-btn resources-btn">
+            <span class="btn-icon">💰</span>
+            <span class="btn-text">Resource Calculator</span>
+        </a>
+        <a href="character.html" class="nav-btn character-btn">
+            <span class="btn-icon">👤</span>
+            <span class="btn-text">Character Creation</span>
+        </a>
+    </div>
+
+    <div class="calculator-container">
+        <div class="army-card">
+            <div class="card-header register-header">
+                <span class="header-icon">📝</span>
+                <h2>Create Account</h2>
+            </div>
+            <div class="card-content">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h3>⚔️ HEX Wars</h3>
+                        <p>Create your account to begin your adventure</p>
+                    </div>
         
         <div class="error-message" id="errorMessage"></div>
         <div class="success-message" id="successMessage"></div>
@@ -248,11 +273,20 @@
                 console.log('Parsed data:', data);
                 
                 if (data.success) {
-                    showMessage('success', 'Account created successfully! Redirecting to login...');
+                    showMessage('success', 'Account created successfully! Redirecting to character builder...');
                     
-                    // Redirect to login page
+                    // Store user info locally for demo
+                    const user = {
+                        id: Date.now(),
+                        username: username,
+                        email: email,
+                        created: new Date().toLocaleDateString()
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    
+                    // Redirect to character builder
                     setTimeout(() => {
-                        window.location.href = 'login.html';
+                        window.location.href = 'character-builder.html';
                     }, 2000);
                 } else {
                     showMessage('error', data.error || 'Registration failed');

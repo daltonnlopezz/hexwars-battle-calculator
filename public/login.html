@@ -6,21 +6,6 @@
     <title>Fantasy Quest - Login</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        .auth-container {
-            max-width: 400px;
-            margin: 50px auto;
-            padding: 30px;
-            background: linear-gradient(135deg, #2a5298 0%, #1e3a5f 100%);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            color: white;
-        }
-        
-        .auth-header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
         .auth-header h1 {
             color: #ffd700;
             margin-bottom: 10px;
@@ -136,82 +121,112 @@
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-header">
-            <h1>⚔️ Fantasy Quest</h1>
-            <p>Enter your credentials to continue your adventure</p>
-        </div>
-        
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
-        
-        <form class="auth-form" id="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="static/images/logo.jpg" alt="HEX Wars Logo" class="logo-image" />
+    </div>
+
+    <h1>HEX WARS - LOGIN / REGISTER</h1>
+    
+    <!-- Navigation Card -->
+    <div class="nav-card">
+        <a href="index.html" class="nav-btn battle-btn">
+            <span class="btn-icon">⚔️</span>
+            <span class="btn-text">Battle Calculator</span>
+        </a>
+        <a href="factions.html" class="nav-btn factions-btn">
+            <span class="btn-icon">📋</span>
+            <span class="btn-text">Faction Details</span>
+        </a>
+        <a href="resources.html" class="nav-btn resources-btn">
+            <span class="btn-icon">💰</span>
+            <span class="btn-text">Resource Calculator</span>
+        </a>
+        <a href="character.html" class="nav-btn character-btn">
+            <span class="btn-icon">⚔️</span>
+            <span class="btn-text">My Characters</span>
+        </a>
+    </div>
+
+    <div class="calculator-container">
+        <div class="army-card">
+            <div class="card-header login-header">
+                <span class="header-icon">🔐</span>
+                <h2>Login / Register</h2>
             </div>
-            
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required>
-            </div>
-            
-            <button type="submit" class="auth-btn">Login to Adventure</button>
-        </form>
+            <div class="card-content">
+                <div class="auth-container">
+                    <div class="auth-header">
+                        <h3>⚔️ HEX Wars</h3>
+                        <p>Enter your credentials to continue your adventure</p>
+                    </div>
         
-        <div class="auth-links">
-            <a href="register.html">Create New Account</a>
-            <span>|</span>
-            <a href="#" onclick="forgotPassword()">Forgot Password?</a>
-        </div>
-        
-        <div class="back-to-home">
-            <a href="index.html">← Back to Battle Calculator</a>
-        </div>
+                    <div class="error-message" id="errorMessage"></div>
+                    <div class="success-message" id="successMessage"></div>
+                    
+                    <form class="auth-form" id="loginForm">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        </div>
+                        
+                        <button type="submit" class="nav-btn login-btn">
+                            <span class="btn-icon">🔐</span>
+                            <span class="btn-text">Login</span>
+                        </button>
+                    </form>
+                    
+                    <div class="auth-links">
+                        <a href="register.html" class="nav-btn register-btn">
+                            <span class="btn-icon">📝</span>
+                            <span class="btn-text">Create New Account</span>
+                        </a>
+                    </div>
+                </div>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             
-            try {
-                const response = await fetch('https://hexwars-api.onrender.com/api/auth/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        username: username,
-                        password: password
-                    })
-                });
+            // Simple local authentication (for demo purposes)
+            const users = JSON.parse(localStorage.getItem('hexWarsUsers') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // Store session info
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                showMessage('Login successful! Redirecting...', 'success');
                 
-                const data = await response.json();
+                // Check if user has characters
+                const characters = JSON.parse(localStorage.getItem('hexWarsCharacters') || '[]');
+                const userCharacters = characters.filter(c => c.userId === user.id);
                 
-                if (data.success) {
-                    // Store session info
-                    localStorage.setItem('session_id', data.session_id);
-                    localStorage.setItem('user_id', data.user_id);
-                    localStorage.setItem('username', data.username);
-                    
-                    showMessage('success', 'Login successful! Redirecting...');
-                    
-                    // Redirect to character management
+                if (userCharacters.length > 0) {
+                    // Redirect to character selection
                     setTimeout(() => {
-                        window.location.href = 'character.html';
+                        window.location.href = 'character-selection.html';
                     }, 1500);
                 } else {
-                    showMessage('error', data.error || 'Login failed');
+                    // Redirect to character builder
+                    setTimeout(() => {
+                        window.location.href = 'character-builder.html';
+                    }, 1500);
                 }
-            } catch (error) {
-                showMessage('error', 'Network error. Please try again.');
+            } else {
+                showMessage('Invalid username or password!', 'error');
             }
         });
         
-        function showMessage(type, message) {
+        function showMessage(message, type) {
             const errorDiv = document.getElementById('errorMessage');
             const successDiv = document.getElementById('successMessage');
             
@@ -224,11 +239,93 @@
                 successDiv.style.display = 'block';
                 errorDiv.style.display = 'none';
             }
-        }
-        
-        function forgotPassword() {
-            alert('Password reset functionality will be implemented soon!');
+            
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+                successDiv.style.display = 'none';
+            }, 5000);
         }
     </script>
+
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-header h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .auth-header p {
+            color: #ccc;
+            font-size: 1.1em;
+        }
+        
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            color: #ffd700;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .form-group input {
+            padding: 12px;
+            border: 2px solid #444;
+            border-radius: 8px;
+            background: #1a1a1a;
+            color: white;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        
+        .auth-links {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .error-message,
+        .success-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff6b6b;
+            border: 1px solid #ff6b6b;
+        }
+        
+        .success-message {
+            background: rgba(0, 255, 0, 0.2);
+            color: #90EE90;
+            border: 1px solid #90EE90;
+        }
+    </style>
 </body>
 </html> 
