@@ -175,97 +175,6 @@
                 </div>
             </div>
 
-            <!-- Round Income Section -->
-            <div id="roundIncomeSection" class="army-card recruitment-card" style="display: none;">
-                <div class="card-header resources-header">
-                    <span class="header-icon">📈</span>
-                    <h2>Round Income</h2>
-                </div>
-                <div class="card-content">
-                    <div class="units-section">
-                        <h3>Round Income Breakdown</h3>
-                        <div id="roundIncomeBreakdown" class="income-breakdown">
-                            <div class="breakdown-section">
-                                <h4>Terrain Income</h4>
-                                <div class="breakdown-grid">
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">🍖</span>
-                                        <span class="breakdown-label">Food:</span>
-                                        <span class="breakdown-value" id="terrainFoodIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">💰</span>
-                                        <span class="breakdown-label">Gold:</span>
-                                        <span class="breakdown-value" id="terrainGoldIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">⚒️</span>
-                                        <span class="breakdown-label">Iron:</span>
-                                        <span class="breakdown-value" id="terrainIronIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">📦</span>
-                                        <span class="breakdown-label">Other:</span>
-                                        <span class="breakdown-value" id="terrainOtherIncome">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="breakdown-section">
-                                <h4>Building Income</h4>
-                                <div class="breakdown-grid">
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">🍖</span>
-                                        <span class="breakdown-label">Food:</span>
-                                        <span class="breakdown-value" id="buildingFoodIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">💰</span>
-                                        <span class="breakdown-label">Gold:</span>
-                                        <span class="breakdown-value" id="buildingGoldIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">⚒️</span>
-                                        <span class="breakdown-label">Iron:</span>
-                                        <span class="breakdown-value" id="buildingIronIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item">
-                                        <span class="resource-icon">📦</span>
-                                        <span class="breakdown-label">Other:</span>
-                                        <span class="breakdown-value" id="buildingOtherIncome">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="breakdown-section total-breakdown">
-                                <h4>Total Round Income</h4>
-                                <div class="breakdown-grid">
-                                    <div class="breakdown-item total-item">
-                                        <span class="resource-icon">🍖</span>
-                                        <span class="breakdown-label">Food:</span>
-                                        <span class="breakdown-value total-value" id="totalFoodIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item total-item">
-                                        <span class="resource-icon">💰</span>
-                                        <span class="breakdown-label">Gold:</span>
-                                        <span class="breakdown-value total-value" id="totalGoldIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item total-item">
-                                        <span class="resource-icon">⚒️</span>
-                                        <span class="breakdown-label">Iron:</span>
-                                        <span class="breakdown-value total-value" id="totalIronIncome">0</span>
-                                    </div>
-                                    <div class="breakdown-item total-item">
-                                        <span class="resource-icon">📦</span>
-                                        <span class="breakdown-label">Other:</span>
-                                        <span class="breakdown-value total-value" id="totalOtherIncome">0</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Action Buttons -->
             <div class="action-buttons">
@@ -356,6 +265,9 @@
     <div id="notification" class="notification"></div>
 
     <script>
+        // Global variable to store calculated income
+        let calculatedIncome = null;
+        
         // Unit data for each faction
         const factionUnits = {
             Empire: [
@@ -612,69 +524,6 @@
             }, 3000);
         }
 
-        // Round Income Display Functions
-        function updateRoundIncomeDisplay() {
-            // Get terrain data
-            const terrainData = {
-                plains: parseInt(document.getElementById('plains').value) || 0,
-                forest: parseInt(document.getElementById('forest').value) || 0,
-                hills: parseInt(document.getElementById('hills').value) || 0,
-                sea: parseInt(document.getElementById('sea').value) || 0
-            };
-            
-            // Get building data
-            const buildingData = {
-                outposts: parseInt(document.getElementById('outpost').value) || 0,
-                ports: parseInt(document.getElementById('harbor').value) || 0,
-                castles: parseInt(document.getElementById('castle').value) || 0,
-                bloodshrines: parseInt(document.getElementById('bloodshrine').value) || 0,
-                mines: parseInt(document.getElementById('mine').value) || 0,
-                fisheries: parseInt(document.getElementById('fishery').value) || 0,
-                breeding_dens: parseInt(document.getElementById('breeding_den').value) || 0
-            };
-            
-            // Calculate terrain income (WORKING) HOW DO MATH?
-            const terrainIncome = {
-                food: (terrainData.plains * 1) + (terrainData.sea * 0),
-                gold: terrainData.hills * 3,
-                iron: terrainData.hills * 3,
-                other: terrainData.sea * 0
-            };
-            
-            // Calculate building income (WORKING) HOW DO MATH?
-            const buildingIncome = {
-                food: (buildingData.castle * 5) + (buildingData.fisheries * 1), 
-                gold: (buildingData.castle * 4) + (buildingData.mine * 2),
-                iron: (buildingData.castle * 4) + (buildingData.mine * 2),
-                other: buildingData.harbor * 0
-            };
-            
-            // Total round income
-            const totalRoundIncome = {
-                food: terrainIncome.food + buildingIncome.food,
-                gold: terrainIncome.gold + buildingIncome.gold,
-                iron: terrainIncome.iron + buildingIncome.iron,
-                other: terrainIncome.other + buildingIncome.other
-            };
-            
-            // Update terrain income display
-            document.getElementById('terrainFoodIncome').textContent = terrainIncome.food;
-            document.getElementById('terrainGoldIncome').textContent = terrainIncome.gold;
-            document.getElementById('terrainIronIncome').textContent = terrainIncome.iron;
-            document.getElementById('terrainOtherIncome').textContent = terrainIncome.other;
-            
-            // Update building income display
-            document.getElementById('buildingFoodIncome').textContent = buildingIncome.food;
-            document.getElementById('buildingGoldIncome').textContent = buildingIncome.gold;
-            document.getElementById('buildingIronIncome').textContent = buildingIncome.iron;
-            document.getElementById('buildingOtherIncome').textContent = buildingIncome.other;
-            
-            // Update total income display
-            document.getElementById('totalFoodIncome').textContent = totalRoundIncome.food;
-            document.getElementById('totalGoldIncome').textContent = totalRoundIncome.gold;
-            document.getElementById('totalIronIncome').textContent = totalRoundIncome.iron;
-            document.getElementById('totalOtherIncome').textContent = totalRoundIncome.other;
-        }
 
         // Income Calculation Functions
         function clearAllIncomeInputs() {
@@ -686,7 +535,7 @@
             });
             
             // Clear building inputs
-            const buildingInputs = ['outposts', 'ports', 'castles'];
+            const buildingInputs = ['outpost', 'harbor', 'castle', 'bloodshrine', 'mine', 'fishery', 'breeding_den'];
             buildingInputs.forEach(id => {
                 const input = document.getElementById(id);
                 if (input) input.value = '0';
@@ -698,14 +547,6 @@
                 kingdomResultsDiv.innerHTML = '';
             }
             
-            // Hide the round income section
-            const roundIncomeSection = document.getElementById('roundIncomeSection');
-            if (roundIncomeSection) {
-                roundIncomeSection.style.display = 'none';
-            }
-            
-            // Update round income display
-            updateRoundIncomeDisplay();
             
             showNotification('All income inputs cleared!', 'success');
         }
@@ -721,25 +562,29 @@
             
             // Get building data
             const buildingData = {
-                outposts: parseInt(document.getElementById('outposts').value) || 0,
-                ports: parseInt(document.getElementById('ports').value) || 0,
-                castles: parseInt(document.getElementById('castles').value) || 0
+                outposts: parseInt(document.getElementById('outpost').value) || 0,
+                harbors: parseInt(document.getElementById('harbor').value) || 0,
+                castles: parseInt(document.getElementById('castle').value) || 0,
+                bloodshrines: parseInt(document.getElementById('bloodshrine').value) || 0,
+                mines: parseInt(document.getElementById('mine').value) || 0,
+                fisheries: parseInt(document.getElementById('fishery').value) || 0,
+                breeding_dens: parseInt(document.getElementById('breeding_den').value) || 0
             };
             
             // Calculate terrain income (example rates)
             const terrainIncome = {
-                food: (terrainData.plains * 2) + (terrainData.forest * 1) + (terrainData.hills * 1),
-                gold: (terrainData.plains * 1) + (terrainData.forest * 2) + (terrainData.hills * 3) + (terrainData.sea * 1),
-                iron: (terrainData.hills * 2) + (terrainData.forest * 1),
-                other: terrainData.sea * 1
+                food: (terrainData.plains * 1),
+                gold: (terrainData.hills * 3),
+                iron: (terrainData.hills * 3),
+                other: terrainData.sea * 0
             };
             
             // Calculate building income (example rates)
             const buildingIncome = {
-                food: buildingData.outposts * 1,
-                gold: (buildingData.outposts * 2) + (buildingData.ports * 3) + (buildingData.castles * 5),
-                iron: (buildingData.outposts * 1) + (buildingData.castles * 2),
-                other: buildingData.ports * 1
+                food: (buildingData.castles * 5) + ((buildingData.fisheries > 0) ? (terrainData.sea * 1) : 0), 
+                gold: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                iron: (buildingData.castles * 4) + ((buildingData.mines > 0) ? (terrainData.hills * 2) : 0),
+                other: buildingData.harbors * 0
             };
             
             // Calculate round income from terrain and buildings
@@ -758,11 +603,8 @@
                 other: roundIncomeData.other
             };
             
-            // Show the round income section
-            const roundIncomeSection = document.getElementById('roundIncomeSection');
-            if (roundIncomeSection) {
-                roundIncomeSection.style.display = 'block';
-            }
+            // Store calculated income globally for use by sendResourceIncomeToPool
+            calculatedIncome = totalIncome;
             
             // Display results in Kingdom Management style
             displayKingdomResults(terrainIncome, buildingIncome, roundIncomeData, totalIncome);
@@ -771,76 +613,66 @@
         }
         
         function sendResourceIncomeToPool() {
+            // Check if income has been calculated
+            if (!calculatedIncome) {
+                showNotification('Please calculate resource income first!', 'error');
+                return;
+            }
+            
             // Get current pool values
             const poolFood = parseInt(document.getElementById('poolFood').value) || 0;
             const poolGold = parseInt(document.getElementById('poolGold').value) || 0;
             const poolIron = parseInt(document.getElementById('poolIron').value) || 0;
             const poolOther = parseInt(document.getElementById('poolOther').value) || 0;
             
-            // Get calculated income (this would need to be stored from previous calculation)
-            const incomeResults = document.getElementById('incomeResults');
-            if (!incomeResults || incomeResults.innerHTML === '') {
-                showNotification('Please calculate resource income first!', 'error');
-                return;
+            // Calculate new pool values
+            const newPoolFood = poolFood + calculatedIncome.food;
+            const newPoolGold = poolGold + calculatedIncome.gold;
+            const newPoolIron = poolIron + calculatedIncome.iron;
+            const newPoolOther = poolOther + calculatedIncome.other;
+            
+            // Show confirmation popup
+            const confirmMessage = `Add income to resource pool?\n\n` +
+                `Current Pool:\n` +
+                `🍖 Food: ${poolFood} → ${newPoolFood}\n` +
+                `💰 Gold: ${poolGold} → ${newPoolGold}\n` +
+                `⚒️ Iron: ${poolIron} → ${newPoolIron}\n` +
+                `📦 Other: ${poolOther} → ${newPoolOther}\n\n` +
+                `Income to add:\n` +
+                `🍖 Food: +${calculatedIncome.food}\n` +
+                `💰 Gold: +${calculatedIncome.gold}\n` +
+                `⚒️ Iron: +${calculatedIncome.iron}\n` +
+                `📦 Other: +${calculatedIncome.other}`;
+            
+            if (confirm(confirmMessage)) {
+                // Update pool values
+                document.getElementById('poolFood').value = newPoolFood;
+                document.getElementById('poolGold').value = newPoolGold;
+                document.getElementById('poolIron').value = newPoolIron;
+                document.getElementById('poolOther').value = newPoolOther;
+                
+                showNotification(`Added ${calculatedIncome.food} food, ${calculatedIncome.gold} gold, ${calculatedIncome.iron} iron, ${calculatedIncome.other} other to resource pool!`, 'success');
+            } else {
+                showNotification('Resource income transfer cancelled.', 'info');
             }
-            
-            // For now, we'll use a simple calculation
-            // In a real implementation, you'd store the calculated values
-            const terrainData = {
-                plains: parseInt(document.getElementById('plains').value) || 0,
-                forest: parseInt(document.getElementById('forest').value) || 0,
-                hills: parseInt(document.getElementById('hills').value) || 0,
-                sea: parseInt(document.getElementById('sea').value) || 0
-            };
-            
-            const buildingData = {
-                outposts: parseInt(document.getElementById('outposts').value) || 0,
-                ports: parseInt(document.getElementById('ports').value) || 0,
-                castles: parseInt(document.getElementById('castles').value) || 0
-            };
-            
-            // Calculate income
-            const terrainIncome = {
-                food: (terrainData.plains * 2) + (terrainData.forest * 1) + (terrainData.hills * 1),
-                gold: (terrainData.plains * 1) + (terrainData.forest * 2) + (terrainData.hills * 3) + (terrainData.sea * 1),
-                iron: (terrainData.hills * 2) + (terrainData.forest * 1),
-                other: terrainData.sea * 1
-            };
-            
-            const buildingIncome = {
-                food: buildingData.outposts * 1,
-                gold: (buildingData.outposts * 2) + (buildingData.ports * 3) + (buildingData.castles * 5),
-                iron: (buildingData.outposts * 1) + (buildingData.castles * 2),
-                other: buildingData.ports * 1
-            };
-            
-            // Calculate round income from terrain and buildings
-            const roundIncomeData = {
-                food: terrainIncome.food + buildingIncome.food,
-                gold: terrainIncome.gold + buildingIncome.gold,
-                iron: terrainIncome.iron + buildingIncome.iron,
-                other: terrainIncome.other + buildingIncome.other
-            };
-            
-            const totalIncome = {
-                food: roundIncomeData.food,
-                gold: roundIncomeData.gold,
-                iron: roundIncomeData.iron,
-                other: roundIncomeData.other
-            };
-            
-            // Add to pool
-            document.getElementById('poolFood').value = poolFood + totalIncome.food;
-            document.getElementById('poolGold').value = poolGold + totalIncome.gold;
-            document.getElementById('poolIron').value = poolIron + totalIncome.iron;
-            document.getElementById('poolOther').value = poolOther + totalIncome.other;
-            
-            showNotification(`Added ${totalIncome.food} food, ${totalIncome.gold} gold, ${totalIncome.iron} iron, ${totalIncome.other} other to resource pool!`, 'success');
         }
         
         function displayKingdomResults(terrainIncome, buildingIncome, roundIncome, totalIncome) {
             const resultsDiv = document.getElementById('kingdomResults');
             if (!resultsDiv) return;
+            
+            // Get building data for display
+            const buildingData = {
+                castles: parseInt(document.getElementById('castle').value) || 0,
+                mines: parseInt(document.getElementById('mine').value) || 0,
+                fisheries: parseInt(document.getElementById('fishery').value) || 0
+            };
+            
+            // Get terrain data for display
+            const terrainData = {
+                hills: parseInt(document.getElementById('hills').value) || 0,
+                sea: parseInt(document.getElementById('sea').value) || 0
+            };
             
             let html = `
                 <div class="kingdom-results">
@@ -853,30 +685,13 @@
                                     <strong>Plains</strong>
                                     <div class="terrain-costs">
                                         <span>🍖 ${terrainIncome.food}</span>
-                                        <span>💰 ${terrainIncome.gold}</span>
-                                    </div>
-                                </div>
-                                <div class="terrain-item">
-                                    <strong>Forest</strong>
-                                    <div class="terrain-costs">
-                                        <span>🍖 ${terrainIncome.food}</span>
-                                        <span>💰 ${terrainIncome.gold}</span>
-                                        <span>⚒️ ${terrainIncome.iron}</span>
                                     </div>
                                 </div>
                                 <div class="terrain-item">
                                     <strong>Hills</strong>
                                     <div class="terrain-costs">
-                                        <span>🍖 ${terrainIncome.food}</span>
                                         <span>💰 ${terrainIncome.gold}</span>
                                         <span>⚒️ ${terrainIncome.iron}</span>
-                                    </div>
-                                </div>
-                                <div class="terrain-item">
-                                    <strong>Sea</strong>
-                                    <div class="terrain-costs">
-                                        <span>💰 ${terrainIncome.gold}</span>
-                                        <span>📦 ${terrainIncome.other}</span>
                                     </div>
                                 </div>
                             </div>
@@ -885,25 +700,24 @@
                             <h5>Building Sources</h5>
                             <div class="building-breakdown">
                                 <div class="building-item">
-                                    <strong>Outposts</strong>
-                                    <div class="building-costs">
-                                        <span>🍖 ${buildingIncome.food}</span>
-                                        <span>💰 ${buildingIncome.gold}</span>
-                                        <span>⚒️ ${buildingIncome.iron}</span>
-                                    </div>
-                                </div>
-                                <div class="building-item">
-                                    <strong>Ports</strong>
-                                    <div class="building-costs">
-                                        <span>💰 ${buildingIncome.gold}</span>
-                                        <span>📦 ${buildingIncome.other}</span>
-                                    </div>
-                                </div>
-                                <div class="building-item">
                                     <strong>Castles</strong>
                                     <div class="building-costs">
-                                        <span>💰 ${buildingIncome.gold}</span>
-                                        <span>⚒️ ${buildingIncome.iron}</span>
+                                        <span>🍖 ${buildingData.castles * 5}</span>
+                                        <span>💰 ${buildingData.castles * 4}</span>
+                                        <span>⚒️ ${buildingData.castles * 4}</span>
+                                    </div>
+                                </div>
+                                <div class="building-item">
+                                    <strong>Mines</strong>
+                                    <div class="building-costs">
+                                        <span>💰 ${buildingData.mines > 0 ? terrainData.hills * 2 : 0}</span>
+                                        <span>⚒️ ${buildingData.mines > 0 ? terrainData.hills * 2 : 0}</span>
+                                    </div>
+                                </div>
+                                <div class="building-item">
+                                    <strong>Fisheries</strong>
+                                    <div class="building-costs">
+                                        <span>🍖 ${buildingData.fisheries > 0 ? terrainData.sea * 1 : 0}</span>
                                     </div>
                                 </div>
                             </div>
@@ -1094,19 +908,6 @@
         // Initialize recruitment units on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateRecruitmentUnits();
-            updateRoundIncomeDisplay();
-            
-            // Add event listeners to terrain and building inputs to update Round Income display
-            const terrainInputs = ['plains', 'forest', 'hills', 'sea'];
-            const buildingInputs = ['outposts', 'ports', 'castles'];
-            
-            [...terrainInputs, ...buildingInputs].forEach(id => {
-                const input = document.getElementById(id);
-                if (input) {
-                    input.addEventListener('input', updateRoundIncomeDisplay);
-                    input.addEventListener('change', updateRoundIncomeDisplay);
-                }
-            });
         });
     </script>
 
