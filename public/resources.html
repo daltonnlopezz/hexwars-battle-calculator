@@ -604,17 +604,26 @@
                 mines: parseInt(document.getElementById('mine').value) || 0,
                 fisheries: parseInt(document.getElementById('fishery').value) || 0
             };
-            
-            // Calculate terrain income (example rates)
-            const terrainIncome = {
-                food: (terrainData.plains * 1),
-                gold: (terrainData.hills * 3),
-                iron: (terrainData.hills * 3),
-                other: terrainData.sea * 0
-            };
-            
             // Get faction selection
             const factionSelection = document.getElementById('recruitmentFaction').value;
+
+            // Calculate terrain income (example rates)
+            let terrainIncome;
+            if (factionSelection === "Ironborne") {
+                terrainIncome = {
+                food: (terrainData.plains * 1),
+                gold: (terrainData.hills * 4),
+                iron: (terrainData.hills * 4),
+                other: terrainData.sea * 0
+                };
+            } else {
+                terrainIncome = {
+                    food: (terrainData.plains * 1),
+                    gold: (terrainData.hills * 3),
+                    iron: (terrainData.hills * 3),
+                    other: terrainData.sea * 0
+                };
+            }          
             
             // Calculate building income based on faction
             let buildingIncome;
@@ -718,6 +727,9 @@
             const resultsDiv = document.getElementById('kingdomResults');
             if (!resultsDiv) return;
             
+            // Get faction selection
+            const factionSelection = document.getElementById('recruitmentFaction').value;
+            
             // Get building data for display
             const buildingData = {
                 castles: parseInt(document.getElementById('castle').value) || 0,
@@ -727,6 +739,7 @@
             
             // Get terrain data for display
             const terrainData = {
+                plains: parseInt(document.getElementById('plains').value) || 0,
                 hills: parseInt(document.getElementById('hills').value) || 0,
                 sea: parseInt(document.getElementById('sea').value) || 0
             };
@@ -741,14 +754,14 @@
                                 <div class="terrain-item">
                                     <strong>Plains</strong>
                                     <div class="terrain-costs">
-                                        <span>🍖 ${terrainIncome.food}</span>
+                                        <span>🍖 ${terrainData.plains * 1}</span>
                                     </div>
                                 </div>
                                 <div class="terrain-item">
                                     <strong>Hills</strong>
                                     <div class="terrain-costs">
-                                        <span>💰 ${terrainIncome.gold}</span>
-                                        <span>⚒️ ${terrainIncome.iron}</span>
+                                        <span>💰 ${terrainData.hills * (factionSelection === "Ironborne" ? 4 : 3)}</span>
+                                        <span>⚒️ ${terrainData.hills * (factionSelection === "Ironborne" ? 4 : 3)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -760,8 +773,8 @@
                                     <strong>Castles</strong>
                                     <div class="building-costs">
                                         <span>🍖 ${buildingData.castles * 5}</span>
-                                        <span>💰 ${buildingData.castles * 4}</span>
-                                        <span>⚒️ ${buildingData.castles * 4}</span>
+                                        <span>💰 ${buildingData.castles * (factionSelection === "Empire" ? 5 : 4)}</span>
+                                        <span>⚒️ ${buildingData.castles * (factionSelection === "Ironborne" ? 5 : 4)}</span>
                                     </div>
                                 </div>
                                 <div class="building-item">
