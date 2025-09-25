@@ -2324,13 +2324,19 @@ button:focus, a:focus, select:focus, input:focus {
 
 .unit-costs {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    min-width: 0;
 }
 
 .cost-item {
     display: flex;
     align-items: center;
     gap: 5px;
+    flex: 1;
+    min-width: 0;
+    justify-content: center;
 }
 
 .cost-icon {
@@ -2340,6 +2346,9 @@ button:focus, a:focus, select:focus, input:focus {
 .cost-value {
     font-weight: bold;
     color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .unit-controls {
@@ -2415,7 +2424,10 @@ button:focus, a:focus, select:focus, input:focus {
 
 .building-costs {
     display: flex;
-    gap: 20px;
+    gap: 15px;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    min-width: 0;
 }
 
 .building-controls {
@@ -2438,7 +2450,13 @@ button:focus, a:focus, select:focus, input:focus {
     .unit-costs,
     .building-costs {
         flex-wrap: wrap;
-        gap: 10px;
+        gap: 8px;
+        justify-content: center;
+    }
+    
+    .cost-item {
+        flex: 0 0 auto;
+        min-width: 60px;
     }
 
     .round-faction-section {
