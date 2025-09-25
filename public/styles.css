@@ -398,6 +398,16 @@ h1 {
     color: #87CEEB;
 }
 
+/* Building Construction Header - Construction Theme */
+.building-construction-header {
+    background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+    border-bottom: 3px solid #654321;
+}
+
+.building-construction-header .header-icon {
+    color: #FFD700;
+}
+
 /* Legacy support */
 .unit-recruitment-header {
     background: linear-gradient(135deg, #4169E1 0%, #0000CD 100%);
@@ -2239,17 +2249,69 @@ button:focus, a:focus, select:focus, input:focus {
     text-align: center;
 }
 
+/* Building Construction Styles */
+.construction-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.construction-building-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
+    border-radius: 10px;
+    border: 1px solid #444;
+    transition: all 0.3s ease;
+}
+
+.construction-building-row:hover {
+    background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border-color: #ffd700;
+}
+
+.building-info {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.building-name {
+    font-weight: bold;
+    color: #ffd700;
+    font-size: 18px;
+}
+
+.building-costs {
+    display: flex;
+    gap: 20px;
+}
+
+.building-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 @media (max-width: 768px) {
     .resource-pool-grid {
         grid-template-columns: 1fr;
     }
 
-    .recruitment-unit-row {
+    .recruitment-unit-row,
+    .construction-building-row {
         flex-direction: column;
         gap: 15px;
     }
 
-    .unit-costs {
+    .unit-costs,
+    .building-costs {
         flex-wrap: wrap;
         gap: 10px;
     }

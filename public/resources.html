@@ -216,6 +216,20 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Construct Building Section -->
+            <div class="army-card building-construction-card">
+                <div class="card-header building-construction-header">
+                    <span class="header-icon">🏗️</span>
+                    <h2>Construct Building</h2>
+                </div>
+                <div class="card-content">
+                    <div class="units-section">
+                        <h3>Building Construction</h3>
+                        <div id="constructionBuildings" class="construction-grid"></div>
+                    </div>
+                </div>
+            </div>
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <button class="clear-btn" onclick="clearAllExpensesInputs()">
@@ -224,11 +238,11 @@
                 </button>
                 <button class="calculate-btn" onclick="calculateUnitExpenses()">
                     <span class="btn-icon">💰</span>
-                    Calculate Unit Expenses
+                    Calculate Expenses
                 </button>
                 <button class="calculate-btn" onclick="takeUnitExpensesFromPool()">
                     <span class="btn-icon">📥</span>
-                    Take Unit Expenses from Pool
+                    Take Expenses from Pool
                 </button>
             </div>
             
@@ -307,6 +321,13 @@
             });
         }
         
+        // Building construction data with escalating costs
+        const buildingConstruction = [
+            { name: "Building 1", food: 0, gold: 10, iron: 10, other: 0 },
+            { name: "Building 2", food: 0, gold: 20, iron: 20, other: 0 },
+            { name: "Building 3", food: 0, gold: 30, iron: 30, other: 0 }
+        ];
+
         // Unit data for each faction
         const factionUnits = {
             Empire: [
@@ -404,6 +425,46 @@
             container.innerHTML = html;
         }
 
+        function updateConstructionBuildings() {
+            const container = document.getElementById('constructionBuildings');
+            
+            let html = '';
+            buildingConstruction.forEach(building => {
+                html += `
+                    <div class="construction-building-row">
+                        <div class="building-info">
+                            <span class="building-name">${building.name}</span>
+                            <div class="building-costs">
+                                <span class="cost-item">
+                                    <span class="cost-icon">🍖</span>
+                                    <span class="cost-value">${building.food}</span>
+                                </span>
+                                <span class="cost-item">
+                                    <span class="cost-icon">💰</span>
+                                    <span class="cost-value">${building.gold}</span>
+                                </span>
+                                <span class="cost-item">
+                                    <span class="cost-icon">⚒️</span>
+                                    <span class="cost-value">${building.iron}</span>
+                                </span>
+                                <span class="cost-item">
+                                    <span class="cost-icon">📦</span>
+                                    <span class="cost-value">${building.other}</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="building-controls">
+                            <button class="unit-btn" onclick="decreaseBuilding('${building.name}')" title="Remove building">-</button>
+                            <span class="unit-quantity" id="building_quantity_${building.name}">0</span>
+                            <button class="unit-btn" onclick="increaseBuilding('${building.name}')" title="Add building (max 1)">+</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
         function increaseUnit(unitName) {
             const quantityElement = document.getElementById(`quantity_${unitName}`);
             const currentQuantity = parseInt(quantityElement.textContent) || 0;
@@ -415,6 +476,44 @@
             const currentQuantity = parseInt(quantityElement.textContent) || 0;
             if (currentQuantity > 0) {
                 quantityElement.textContent = currentQuantity - 1;
+            }
+        }
+
+        function increaseBuilding(buildingName) {
+            const quantityElement = document.getElementById(`building_quantity_${buildingName}`);
+            const currentQuantity = parseInt(quantityElement.textContent) || 0;
+            if (currentQuantity < 1) {
+                quantityElement.textContent = currentQuantity + 1;
+                // Update button state
+                updateBuildingButtonState(buildingName);
+            }
+        }
+
+        function updateBuildingButtonState(buildingName) {
+            const quantityElement = document.getElementById(`building_quantity_${buildingName}`);
+            const currentQuantity = parseInt(quantityElement.textContent) || 0;
+            const increaseBtn = document.querySelector(`button[onclick="increaseBuilding('${buildingName}')"]`);
+            
+            if (increaseBtn) {
+                if (currentQuantity >= 1) {
+                    increaseBtn.disabled = true;
+                    increaseBtn.style.opacity = '0.5';
+                    increaseBtn.title = 'Maximum reached (1)';
+                } else {
+                    increaseBtn.disabled = false;
+                    increaseBtn.style.opacity = '1';
+                    increaseBtn.title = 'Add building (max 1)';
+                }
+            }
+        }
+
+        function decreaseBuilding(buildingName) {
+            const quantityElement = document.getElementById(`building_quantity_${buildingName}`);
+            const currentQuantity = parseInt(quantityElement.textContent) || 0;
+            if (currentQuantity > 0) {
+                quantityElement.textContent = currentQuantity - 1;
+                // Update button state
+                updateBuildingButtonState(buildingName);
             }
         }
 
@@ -816,6 +915,15 @@
                 quantity.textContent = '0';
             });
             
+            // Clear all building quantity inputs and reset button states
+            const buildingQuantities = document.querySelectorAll('[id^="building_quantity_"]');
+            buildingQuantities.forEach(quantity => {
+                quantity.textContent = '0';
+                // Extract building name from the ID
+                const buildingName = quantity.id.replace('building_quantity_', '');
+                updateBuildingButtonState(buildingName);
+            });
+            
             showNotification('All expense inputs cleared!', 'success');
         }
         
@@ -831,7 +939,9 @@
             };
             
             let unitBreakdown = [];
+            let buildingBreakdown = [];
             
+            // Calculate unit expenses
             units.forEach(unit => {
                 const quantity = parseInt(document.getElementById(`quantity_${unit.name}`).textContent) || 0;
                 if (quantity > 0) {
@@ -841,7 +951,7 @@
                         food: unit.food * quantity,
                         gold: unit.gold * quantity,
                         iron: unit.iron * quantity,
-                        other: unit.thrall_egg_fae * quantity
+                        other: unit.other * quantity
                     };
                     
                     unitBreakdown.push(unitExpense);
@@ -853,10 +963,32 @@
                 }
             });
             
-            // Display results
-            displayExpenseResults(unitBreakdown, totalExpenses);
+            // Calculate building expenses
+            buildingConstruction.forEach(building => {
+                const quantity = parseInt(document.getElementById(`building_quantity_${building.name}`).textContent) || 0;
+                if (quantity > 0) {
+                    const buildingExpense = {
+                        name: building.name,
+                        quantity: quantity,
+                        food: building.food * quantity,
+                        gold: building.gold * quantity,
+                        iron: building.iron * quantity,
+                        other: building.other * quantity
+                    };
+                    
+                    buildingBreakdown.push(buildingExpense);
+                    
+                    totalExpenses.food += buildingExpense.food;
+                    totalExpenses.gold += buildingExpense.gold;
+                    totalExpenses.iron += buildingExpense.iron;
+                    totalExpenses.other += buildingExpense.other;
+                }
+            });
             
-            showNotification('Unit expenses calculated!', 'success');
+            // Display results
+            displayExpenseResults(unitBreakdown, buildingBreakdown, totalExpenses);
+            
+            showNotification('Unit and building expenses calculated!', 'success');
         }
         
         function takeUnitExpensesFromPool() {
@@ -878,7 +1010,9 @@
             };
             
             let unitBreakdown = [];
+            let buildingBreakdown = [];
             
+            // Calculate unit expenses
             units.forEach(unit => {
                 const quantity = parseInt(document.getElementById(`quantity_${unit.name}`).textContent) || 0;
                 if (quantity > 0) {
@@ -888,7 +1022,7 @@
                         food: unit.food * quantity,
                         gold: unit.gold * quantity,
                         iron: unit.iron * quantity,
-                        other: unit.thrall_egg_fae * quantity
+                        other: unit.other * quantity
                     };
                     
                     unitBreakdown.push(unitExpense);
@@ -900,9 +1034,31 @@
                 }
             });
             
-            // Check if any units are selected
+            // Calculate building expenses
+            buildingConstruction.forEach(building => {
+                const quantity = parseInt(document.getElementById(`building_quantity_${building.name}`).textContent) || 0;
+                if (quantity > 0) {
+                    const buildingExpense = {
+                        name: building.name,
+                        quantity: quantity,
+                        food: building.food * quantity,
+                        gold: building.gold * quantity,
+                        iron: building.iron * quantity,
+                        other: building.other * quantity
+                    };
+                    
+                    buildingBreakdown.push(buildingExpense);
+                    
+                    totalExpenses.food += buildingExpense.food;
+                    totalExpenses.gold += buildingExpense.gold;
+                    totalExpenses.iron += buildingExpense.iron;
+                    totalExpenses.other += buildingExpense.other;
+                }
+            });
+            
+            // Check if any units or buildings are selected
             if (totalExpenses.food === 0 && totalExpenses.gold === 0 && totalExpenses.iron === 0 && totalExpenses.other === 0) {
-                showNotification('Please select units to recruit first!', 'error');
+                showNotification('Please select units to recruit or buildings to construct first!', 'error');
                 return;
             }
             
@@ -925,14 +1081,21 @@
                 unitDetails += `${unit.name} (${unit.quantity}): 🍖${unit.food} 💰${unit.gold} ⚒️${unit.iron} 📦${unit.other}\n`;
             });
             
+            // Build building breakdown for confirmation
+            let buildingDetails = '';
+            buildingBreakdown.forEach(building => {
+                buildingDetails += `${building.name} (${building.quantity}): 🍖${building.food} 💰${building.gold} ⚒️${building.iron} 📦${building.other}\n`;
+            });
+            
             // Show confirmation popup
-            const confirmMessage = `Deduct unit expenses from resource pool?\n\n` +
+            const confirmMessage = `Deduct unit and building expenses from resource pool?\n\n` +
                 `Current Pool:\n` +
                 `🍖 Food: ${poolFood} → ${newPoolFood}\n` +
                 `💰 Gold: ${poolGold} → ${newPoolGold}\n` +
                 `⚒️ Iron: ${poolIron} → ${newPoolIron}\n` +
                 `📦 Other: ${poolOther} → ${newPoolOther}\n\n` +
-                `Units to recruit:\n${unitDetails}\n` +
+                `Units to recruit:\n${unitDetails}` +
+                `Buildings to construct:\n${buildingDetails}\n` +
                 `Total expenses:\n` +
                 `🍖 Food: -${totalExpenses.food}\n` +
                 `💰 Gold: -${totalExpenses.gold}\n` +
@@ -950,18 +1113,18 @@
                     showNotification(`Deducted ${totalExpenses.food} food, ${totalExpenses.gold} gold, ${totalExpenses.iron} iron, ${totalExpenses.other} other from resource pool!`, 'success');
                 },
                 () => {
-                    showNotification('Unit expense deduction cancelled.', 'info');
+                    showNotification('Unit and building expense deduction cancelled.', 'info');
                 }
             );
         }
         
-        function displayExpenseResults(unitBreakdown, totalExpenses) {
+        function displayExpenseResults(unitBreakdown, buildingBreakdown, totalExpenses) {
             const resultsDiv = document.getElementById('expenseResults');
             if (!resultsDiv) return;
             
             let html = `
                 <div class="expense-results">
-                    <h4>Unit Expenses Breakdown</h4>
+                    <h4>Unit and Building Expenses Breakdown</h4>
                     <div class="expense-grid">
                         <div class="expense-section">
                             <h5>Unit Costs</h5>
@@ -976,6 +1139,26 @@
                             <span>💰 ${unit.gold}</span>
                             <span>⚒️ ${unit.iron}</span>
                             <span>📦 ${unit.other}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        </div>
+                        <div class="expense-section">
+                            <h5>Building Costs</h5>
+            `;
+            
+            buildingBreakdown.forEach(building => {
+                html += `
+                    <div class="expense-item">
+                        <strong>${building.name} (${building.quantity})</strong>
+                        <div class="building-costs">
+                            <span>🍖 ${building.food}</span>
+                            <span>💰 ${building.gold}</span>
+                            <span>⚒️ ${building.iron}</span>
+                            <span>📦 ${building.other}</span>
                         </div>
                     </div>
                 `;
@@ -1027,9 +1210,15 @@
             console.log('Current round:', roundInput.value);
         }
 
-        // Initialize recruitment units on page load
+        // Initialize recruitment units and building construction on page load
         document.addEventListener('DOMContentLoaded', function() {
             updateRecruitmentUnits();
+            updateConstructionBuildings();
+            
+            // Initialize building button states
+            buildingConstruction.forEach(building => {
+                updateBuildingButtonState(building.name);
+            });
         });
     </script>
 
