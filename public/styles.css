@@ -2532,7 +2532,8 @@ button:focus, a:focus, select:focus, input:focus {
     border-color: #ffd700;
 }
 
-.unit-header {
+/* Unit Header for Faction Detail Pages */
+.unit-detail-card .unit-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2541,7 +2542,7 @@ button:focus, a:focus, select:focus, input:focus {
     border-bottom: 2px solid #444;
 }
 
-.unit-header h3 {
+.unit-detail-card .unit-header h3 {
     color: #ffd700;
     font-size: 28px;
     margin: 0;
