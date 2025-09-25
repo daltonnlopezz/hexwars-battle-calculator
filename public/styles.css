@@ -35,12 +35,14 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
     gap: 15px;
+    align-items: stretch;
 }
 
 /* Base Navigation Button */
 .nav-btn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     padding: 15px 25px;
     color: white;
@@ -52,6 +54,10 @@ h1 {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
+    min-width: 200px;
+    min-height: 60px;
+    flex: 1;
+    max-width: 300px;
 }
 
 .nav-btn::before {
@@ -1072,6 +1078,19 @@ body {
     }
 }
 
+@media (max-width: 900px) {
+    .nav-card {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        max-width: 400px;
+        min-width: 250px;
+    }
+}
+
 @media (max-width: 768px) {
     body {
         padding: 10px;
@@ -1088,14 +1107,21 @@ body {
     .nav-card {
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 15px;
         align-items: center;
+    }
+    
+    .nav-btn {
+        width: 100%;
+        max-width: 350px;
+        min-width: 280px;
+        min-height: 65px;
+        font-size: 18px;
+        padding: 18px 25px;
     }
     
     .factions-btn, .character-btn {
         margin-left: 0;
-        width: 100%;
-        max-width: 300px;
     }
     
     .conditions-grid {
