@@ -4,6 +4,8 @@ body {
     font-family: Arial, sans-serif;
     padding: 20px;
     margin: 0;
+    max-width: 100vw;
+    overflow-x: hidden;
 }
 
 .logo-container {
@@ -222,6 +224,8 @@ h1 {
     align-items: start;
     padding: 0 20px;
     box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Army Cards */
@@ -1086,14 +1090,15 @@ body {
     
     .nav-btn {
         width: 100%;
-        max-width: 400px;
-        min-width: 250px;
+        max-width: 350px;
+        min-width: 240px;
     }
 }
 
 @media (max-width: 768px) {
     body {
         padding: 10px;
+        overflow-x: hidden;
     }
     
     .card-content {
@@ -1113,11 +1118,11 @@ body {
     
     .nav-btn {
         width: 100%;
-        max-width: 350px;
-        min-width: 280px;
+        max-width: 320px;
+        min-width: 260px;
         min-height: 65px;
         font-size: 18px;
-        padding: 18px 25px;
+        padding: 18px 20px;
     }
     
     .factions-btn, .character-btn {
@@ -1140,6 +1145,100 @@ body {
     
     .notification.show {
         transform: translateY(0);
+    }
+    
+    /* Mobile Table Optimizations */
+    .unit-table {
+        font-size: 12px;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+    
+    .unit-table th, .unit-table td {
+        padding: 8px 6px;
+        min-width: 80px;
+    }
+    
+    .faction-card {
+        padding: 15px;
+        margin: 15px 0;
+    }
+    
+    .faction-card .faction-title {
+        font-size: 20px;
+    }
+    
+    .faction-card .faction-section-title {
+        font-size: 16px;
+    }
+    
+    /* Calculator Container Mobile */
+    .calculator-container {
+        padding: 0 5px;
+    }
+    
+    /* Round Counter Mobile */
+    .round-faction-section {
+        padding: 0 10px;
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .round-counter-card,
+    .faction-selection-card {
+        padding: 15px 20px;
+        max-width: none;
+    }
+    
+    .round-counter-controls,
+    .faction-selection-controls {
+        gap: 15px;
+    }
+    
+    .round-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+    }
+    
+    .round-display input {
+        width: 70px;
+        height: 45px;
+        font-size: 20px;
+    }
+    
+    /* Resource Pool Mobile */
+    .resource-pool-section {
+        padding: 0 10px;
+    }
+    
+    .resource-pool-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .resource-pool-item {
+        padding: 12px;
+    }
+    
+    .resource-pool-item input {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+    
+    /* Action Buttons Mobile */
+    .action-buttons {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+    }
+    
+    .action-buttons button {
+        width: 100%;
+        max-width: 300px;
+        padding: 12px 20px;
+        font-size: 14px;
     }
 }
 
