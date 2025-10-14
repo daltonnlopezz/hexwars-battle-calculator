@@ -36,6 +36,22 @@
         </a>
     </div>
 
+    <!-- Game State Controls -->
+    <div class="game-state-controls">
+        <button class="game-state-btn save-btn" onclick="saveGameState(true)" title="Save current game state">
+            <span class="btn-icon">💾</span>
+            <span class="btn-text">Save Game</span>
+        </button>
+        <button class="game-state-btn load-btn" onclick="loadGameState(true)" title="Load saved game state">
+            <span class="btn-icon">📂</span>
+            <span class="btn-text">Load Game</span>
+        </button>
+        <button class="game-state-btn clear-btn" onclick="clearSavedGameState()" title="Clear saved game data">
+            <span class="btn-icon">🗑️</span>
+            <span class="btn-text">Clear Save</span>
+        </button>
+    </div>
+
     <!-- Round Counter and Faction Selection Section -->
     <div class="round-faction-section">
         <div class="round-counter-card">
@@ -74,6 +90,25 @@
                         <option value="Damned">Damned</option>
                     </select>
                 </div>
+            </div>
+        </div>
+        
+        <div class="trade-networks-card" id="tradeNetworksCard" style="display: none;">
+            <div class="trade-networks-header">
+                <span class="trade-networks-icon">🌐</span>
+                <h3>Complete Trade Networks</h3>
+            </div>
+            <div class="trade-networks-controls">
+                <button class="round-btn" onclick="decreaseTradeNetworks()" title="Previous Trade Network">
+                    <span>−</span>
+                </button>
+                <div class="round-display">
+                    <input type="number" id="tradeNetworks" min="0" value="0" onchange="updateTradeNetworks()" oninput="handleIncomeInputChange()">
+                    <span class="round-label">Networks</span>
+                </div>
+                <button class="round-btn" onclick="increaseTradeNetworks()" title="Next Trade Network">
+                    <span>+</span>
+                </button>
             </div>
         </div>
     </div>
@@ -182,13 +217,13 @@
                     <span class="btn-icon">🗑️</span>
                     Clear All Income
                 </button>
-                <button class="calculate-btn" onclick="calculateResourceIncome()">
+                <button class="calculate-btn calculate-income-btn" onclick="calculateResourceIncome()">
                     <span class="btn-icon">💰</span>
-                    Calculate Resource Income
+                    Calculate Income
                 </button>
-                <button class="calculate-btn" onclick="sendResourceIncomeToPool()">
+                <button class="calculate-btn income-btn" onclick="sendResourceIncomeToPool()">
                     <span class="btn-icon">📥</span>
-                    Send Resource Income to Pool
+                    Send Income to Pool
                 </button>
             </div>
             
@@ -236,12 +271,12 @@
                     <span class="btn-icon">🗑️</span>
                     Clear All Expenses
                 </button>
-                <button class="calculate-btn" onclick="calculateUnitExpenses()">
+                <button class="calculate-btn calculate-expense-btn" onclick="calculateUnitExpenses()">
                     <span class="btn-icon">💰</span>
                     Calculate Expenses
                 </button>
-                <button class="calculate-btn" onclick="takeUnitExpensesFromPool()">
-                    <span class="btn-icon">📥</span>
+                <button class="calculate-btn expense-btn" onclick="takeUnitExpensesFromPool()">
+                    <span class="btn-icon">📤</span>
                     Take Expenses from Pool
                 </button>
             </div>
@@ -387,6 +422,25 @@
             const faction = document.getElementById('recruitmentFaction').value;
             const units = factionUnits[faction] || [];
             const container = document.getElementById('recruitmentUnits');
+            
+            // Show/hide trade networks card based on faction selection
+            const tradeNetworksCard = document.getElementById('tradeNetworksCard');
+            if (faction === 'Vanguard') {
+                tradeNetworksCard.style.display = 'block';
+                // Add event listeners to trade networks input when it becomes visible
+                const tradeInput = document.getElementById('tradeNetworks');
+                if (tradeInput && !tradeInput.hasAttribute('data-listener-added')) {
+                    console.log('Adding event listeners to trade networks input');
+                    tradeInput.addEventListener('input', handleIncomeInputChange);
+                    tradeInput.addEventListener('change', handleIncomeInputChange);
+                    tradeInput.setAttribute('data-listener-added', 'true');
+                }
+            } else {
+                tradeNetworksCard.style.display = 'none';
+            }
+            
+            // Auto-save game state when faction changes
+            saveGameState();
             
             let html = '';
             units.forEach(unit => {
@@ -679,6 +733,12 @@
                 if (input) input.value = '0';
             });
             
+            // Clear trade networks input
+            const tradeNetworksInput = document.getElementById('tradeNetworks');
+            if (tradeNetworksInput) {
+                tradeNetworksInput.value = '0';
+            }
+            
             // Hide the kingdom results
             const kingdomResultsDiv = document.getElementById('kingdomResults');
             if (kingdomResultsDiv) {
@@ -703,6 +763,10 @@
                 mines: parseInt(document.getElementById('mine').value) || 0,
                 fisheries: parseInt(document.getElementById('fishery').value) || 0
             };
+            
+            // Get trade networks data (only for Vanguard)
+            const tradeNetworks = parseInt(document.getElementById('tradeNetworks').value) || 0;
+            
             // Get faction selection
             const factionSelection = document.getElementById('recruitmentFaction').value;
 
@@ -749,15 +813,32 @@
                 };
             }
             
-            // Calculate round income from terrain and buildings
-            const roundIncomeData = {
-                food: terrainIncome.food + buildingIncome.food,
-                gold: terrainIncome.gold + buildingIncome.gold,
-                iron: terrainIncome.iron + buildingIncome.iron,
-                other: terrainIncome.other + buildingIncome.other
+            // Calculate trade networks income (only for Vanguard)
+            let tradeNetworksIncome = {
+                food: 0,
+                gold: 0,
+                iron: 0,
+                other: 0
             };
             
-            // Total income (roundIncomeData is already terrain + building)
+            if (factionSelection === "Vanguard") {
+                tradeNetworksIncome = {
+                    food: 0,
+                    gold: tradeNetworks * 2,
+                    iron: tradeNetworks * 2,
+                    other: 0
+                };
+            }
+            
+            // Calculate round income from terrain, buildings, and trade networks
+            const roundIncomeData = {
+                food: terrainIncome.food + buildingIncome.food + tradeNetworksIncome.food,
+                gold: terrainIncome.gold + buildingIncome.gold + tradeNetworksIncome.gold,
+                iron: terrainIncome.iron + buildingIncome.iron + tradeNetworksIncome.iron,
+                other: terrainIncome.other + buildingIncome.other + tradeNetworksIncome.other
+            };
+            
+            // Total income (roundIncomeData is already terrain + building + trade networks)
             const totalIncome = {
                 food: roundIncomeData.food,
                 gold: roundIncomeData.gold,
@@ -769,7 +850,7 @@
             calculatedIncome = totalIncome;
             
             // Display results in Kingdom Management style
-            displayKingdomResults(terrainIncome, buildingIncome, roundIncomeData, totalIncome);
+            displayKingdomResults(terrainIncome, buildingIncome, tradeNetworksIncome, roundIncomeData, totalIncome);
             
             showNotification('Resource income calculated!', 'success');
         }
@@ -808,13 +889,31 @@
             
             showConfirmation(confirmMessage, 
                 () => {
+                    // Store income values before clearing
+                    const incomeFood = calculatedIncome.food;
+                    const incomeGold = calculatedIncome.gold;
+                    const incomeIron = calculatedIncome.iron;
+                    const incomeOther = calculatedIncome.other;
+                    
                     // Update pool values
                     document.getElementById('poolFood').value = newPoolFood;
                     document.getElementById('poolGold').value = newPoolGold;
                     document.getElementById('poolIron').value = newPoolIron;
                     document.getElementById('poolOther').value = newPoolOther;
                     
-                    showNotification(`Added ${calculatedIncome.food} food, ${calculatedIncome.gold} gold, ${calculatedIncome.iron} iron, ${calculatedIncome.other} other to resource pool!`, 'success');
+                    // Auto-save game state
+                    saveGameState();
+                    
+                    // Clear kingdom results to force recalculation
+                    const kingdomResultsDiv = document.getElementById('kingdomResults');
+                    if (kingdomResultsDiv) {
+                        kingdomResultsDiv.innerHTML = '';
+                    }
+                    
+                    // Clear calculated income to prevent reuse
+                    calculatedIncome = null;
+                    
+                    showNotification(`Added ${incomeFood} food, ${incomeGold} gold, ${incomeIron} iron, ${incomeOther} other to resource pool!`, 'success');
                 },
                 () => {
                     showNotification('Resource income transfer cancelled.', 'info');
@@ -822,7 +921,7 @@
             );
         }
         
-        function displayKingdomResults(terrainIncome, buildingIncome, roundIncome, totalIncome) {
+        function displayKingdomResults(terrainIncome, buildingIncome, tradeNetworksIncome, roundIncome, totalIncome) {
             const resultsDiv = document.getElementById('kingdomResults');
             if (!resultsDiv) return;
             
@@ -842,6 +941,9 @@
                 hills: parseInt(document.getElementById('hills').value) || 0,
                 sea: parseInt(document.getElementById('sea').value) || 0
             };
+            
+            // Get trade networks data for display
+            const tradeNetworks = parseInt(document.getElementById('tradeNetworks').value) || 0;
             
             let html = `
                 <div class="kingdom-results">
@@ -891,6 +993,20 @@
                                 </div>
                             </div>
                         </div>
+                        ${factionSelection === "Vanguard" && tradeNetworks > 0 ? `
+                        <div class="kingdom-section">
+                            <h5>Trade Networks</h5>
+                            <div class="trade-networks-breakdown">
+                                <div class="trade-networks-item">
+                                    <strong>Complete Trade Networks (${tradeNetworks})</strong>
+                                    <div class="trade-networks-costs">
+                                        <span>💰 ${tradeNetworks * 2}</span>
+                                        <span>⚒️ ${tradeNetworks * 2}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div class="kingdom-section total-section">
                             <h5>Total Kingdom Income</h5>
                             <div class="total-breakdown">
@@ -1104,13 +1220,43 @@
             
             showConfirmation(confirmMessage, 
                 () => {
+                    // Store expense values before clearing
+                    const expenseFood = totalExpenses.food;
+                    const expenseGold = totalExpenses.gold;
+                    const expenseIron = totalExpenses.iron;
+                    const expenseOther = totalExpenses.other;
+                    
                     // Deduct from pool
                     document.getElementById('poolFood').value = newPoolFood;
                     document.getElementById('poolGold').value = newPoolGold;
                     document.getElementById('poolIron').value = newPoolIron;
                     document.getElementById('poolOther').value = newPoolOther;
                     
-                    showNotification(`Deducted ${totalExpenses.food} food, ${totalExpenses.gold} gold, ${totalExpenses.iron} iron, ${totalExpenses.other} other from resource pool!`, 'success');
+                    // Auto-save game state
+                    saveGameState();
+                    
+                    // Clear expense results
+                    const expenseResultsDiv = document.getElementById('expenseResults');
+                    if (expenseResultsDiv) {
+                        expenseResultsDiv.innerHTML = '';
+                    }
+                    
+                    // Reset all unit quantities to 0
+                    const unitQuantities = document.querySelectorAll('.unit-quantity');
+                    unitQuantities.forEach(quantity => {
+                        quantity.textContent = '0';
+                    });
+                    
+                    // Reset all building quantities to 0 and update button states
+                    const buildingQuantities = document.querySelectorAll('[id^="building_quantity_"]');
+                    buildingQuantities.forEach(quantity => {
+                        quantity.textContent = '0';
+                        // Extract building name from the ID
+                        const buildingName = quantity.id.replace('building_quantity_', '');
+                        updateBuildingButtonState(buildingName);
+                    });
+                    
+                    showNotification(`Deducted ${expenseFood} food, ${expenseGold} gold, ${expenseIron} iron, ${expenseOther} other from resource pool!`, 'success');
                 },
                 () => {
                     showNotification('Unit and building expense deduction cancelled.', 'info');
@@ -1206,12 +1352,161 @@
                 roundInput.value = 1;
             }
             
+            // Auto-save game state
+            saveGameState();
+            
             // You can add additional logic here for round-specific functionality
             console.log('Current round:', roundInput.value);
         }
 
+        // Trade Networks Functions
+        function increaseTradeNetworks() {
+            const tradeNetworksInput = document.getElementById('tradeNetworks');
+            const currentNetworks = parseInt(tradeNetworksInput.value) || 0;
+            tradeNetworksInput.value = currentNetworks + 1;
+            updateTradeNetworks();
+        }
+
+        function decreaseTradeNetworks() {
+            const tradeNetworksInput = document.getElementById('tradeNetworks');
+            const currentNetworks = parseInt(tradeNetworksInput.value) || 0;
+            if (currentNetworks > 0) {
+                tradeNetworksInput.value = currentNetworks - 1;
+                updateTradeNetworks();
+            }
+        }
+
+        function updateTradeNetworks() {
+            const tradeNetworksInput = document.getElementById('tradeNetworks');
+            const currentNetworks = parseInt(tradeNetworksInput.value) || 0;
+            
+            // Ensure minimum networks is 0
+            if (currentNetworks < 0) {
+                tradeNetworksInput.value = 0;
+            }
+            
+            // Auto-save game state
+            saveGameState();
+            
+            // Trigger dynamic update if kingdom results exist
+            handleIncomeInputChange();
+            
+            // You can add additional logic here for trade networks functionality
+            console.log('Complete Trade Networks:', tradeNetworksInput.value);
+        }
+
+        // Function to handle dynamic income updates
+        function handleIncomeInputChange() {
+            // Only update if there are existing kingdom results
+            const kingdomResultsDiv = document.getElementById('kingdomResults');
+            if (kingdomResultsDiv && kingdomResultsDiv.innerHTML !== '') {
+                console.log('Dynamic update triggered');
+                calculateResourceIncome();
+            }
+        }
+
+        // ========================================
+        // LOCAL STORAGE FUNCTIONS
+        // ========================================
+        
+        // Save current game state to localStorage
+        function saveGameState(showNotification = false) {
+            const gameState = {
+                resourcePool: {
+                    food: parseInt(document.getElementById('poolFood').value) || 0,
+                    gold: parseInt(document.getElementById('poolGold').value) || 0,
+                    iron: parseInt(document.getElementById('poolIron').value) || 0,
+                    other: parseInt(document.getElementById('poolOther').value) || 0
+                },
+                currentRound: parseInt(document.getElementById('currentRound').value) || 1,
+                selectedFaction: document.getElementById('recruitmentFaction').value || 'Empire',
+                tradeNetworks: parseInt(document.getElementById('tradeNetworks').value) || 0,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                localStorage.setItem('hexWarsGameState', JSON.stringify(gameState));
+                console.log('Game state saved to localStorage');
+                
+                if (showNotification) {
+                    showNotification('Game state saved successfully!', 'success');
+                }
+            } catch (error) {
+                console.error('Error saving game state:', error);
+                if (showNotification) {
+                    showNotification('Error saving game state!', 'error');
+                }
+            }
+        }
+        
+        // Load game state from localStorage
+        function loadGameState(showNotification = false) {
+            try {
+                const savedState = localStorage.getItem('hexWarsGameState');
+                if (savedState) {
+                    const gameState = JSON.parse(savedState);
+                    
+                    // Restore resource pool
+                    document.getElementById('poolFood').value = gameState.resourcePool.food;
+                    document.getElementById('poolGold').value = gameState.resourcePool.gold;
+                    document.getElementById('poolIron').value = gameState.resourcePool.iron;
+                    document.getElementById('poolOther').value = gameState.resourcePool.other;
+                    
+                    // Restore round
+                    document.getElementById('currentRound').value = gameState.currentRound;
+                    
+                    // Restore faction
+                    document.getElementById('recruitmentFaction').value = gameState.selectedFaction;
+                    updateRecruitmentUnits(); // This will also show/hide trade networks
+                    
+                    // Restore trade networks if it was saved
+                    if (gameState.tradeNetworks !== undefined) {
+                        document.getElementById('tradeNetworks').value = gameState.tradeNetworks;
+                    }
+                    
+                    console.log('Game state loaded from localStorage');
+                    
+                    if (showNotification) {
+                        showNotification('Game state loaded successfully!', 'success');
+                    }
+                    
+                    return true;
+                } else {
+                    if (showNotification) {
+                        showNotification('No saved game found!', 'error');
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading game state:', error);
+                if (showNotification) {
+                    showNotification('Error loading saved game!', 'error');
+                }
+            }
+            return false;
+        }
+        
+        // Clear saved game state
+        function clearSavedGameState() {
+            try {
+                localStorage.removeItem('hexWarsGameState');
+                console.log('Saved game state cleared');
+                showNotification('Saved game data cleared!', 'info');
+            } catch (error) {
+                console.error('Error clearing game state:', error);
+            }
+        }
+        
+        // Check if saved data exists
+        function hasSavedGameState() {
+            return localStorage.getItem('hexWarsGameState') !== null;
+        }
+
         // Initialize recruitment units and building construction on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Try to load saved game state first
+            const hasSavedData = loadGameState();
+            
+            // Initialize the interface
             updateRecruitmentUnits();
             updateConstructionBuildings();
             
@@ -1219,6 +1514,39 @@
             buildingConstruction.forEach(building => {
                 updateBuildingButtonState(building.name);
             });
+            
+            // Add event listeners for dynamic income updates
+            const terrainInputs = ['plains', 'hills', 'sea'];
+            const buildingInputs = ['castle', 'mine', 'fishery'];
+            
+            // Add listeners to terrain inputs
+            terrainInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', handleIncomeInputChange);
+                    input.addEventListener('change', handleIncomeInputChange);
+                }
+            });
+            
+            // Add listeners to building inputs
+            buildingInputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.addEventListener('input', handleIncomeInputChange);
+                    input.addEventListener('change', handleIncomeInputChange);
+                }
+            });
+            
+            // Add listener to faction selection for dynamic updates
+            const factionSelect = document.getElementById('recruitmentFaction');
+            if (factionSelect) {
+                factionSelect.addEventListener('change', handleIncomeInputChange);
+            }
+            
+            // Show notification if data was restored
+            if (hasSavedData) {
+                showNotification('Previous game session restored!', 'info');
+            }
         });
     </script>
 
