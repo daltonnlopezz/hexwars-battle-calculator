@@ -9,32 +9,55 @@
 </head>
 
 <body>
-    <!-- Logo -->
-    <div class="logo-container">
-        <img src="static/images/logo.jpg" alt="HEX Wars Logo" class="logo-image" />
-    </div>
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="homepage.html" aria-label="HEX Wars Home">
+                <img src="static/images/logo.jpg" alt="HEX Wars Logo">
+                <span class="brand-name">HEX Wars</span>
+            </a>
+            <nav class="topnav-center">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="lore.html">Lore ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="lore.html">All Lore</a>
+                        <a href="factions.html">Factions</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="tools.html">Game Tools ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="factions.html">Factions</a>
+                        <a href="index.html">Battle Calculator</a>
+                        <a href="resources.html">Resource Calculator</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-right">
+                <a class="nav-link" href="shop.html">🛒 Shop</a>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="about.html">About ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="about.html">About HEX Wars</a>
+                        <a href="updates.html">Updates</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="accountBtn" class="account-btn dropdown-trigger">👤 <span id="accountLabel">Account</span> ▾</button>
+                    <div id="accountMenu" class="account-menu dropdown-menu" aria-hidden="true">
+                        <a href="login.html">Login</a>
+                        <a href="register.html">Sign Up</a>
+                        <a href="#">Support</a>
+                        <a href="#">Account Settings</a>
+                        <a id="accountAction" href="character-selection.html" style="display:none;">Account Home</a>
+                        <button id="logoutBtn" style="display:none;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <h1>IRONBORNE FACTION GUIDE</h1>
-
-    <!-- Navigation Card -->
-    <div class="nav-card">
-        <a href="index.html" class="nav-btn battle-btn">
-            <span class="btn-icon">⚔️</span>
-            <span class="btn-text">Battle Calculator</span>
-        </a>
-        <a href="factions.html" class="nav-btn factions-btn">
-            <span class="btn-icon">📋</span>
-            <span class="btn-text">Faction Details</span>
-        </a>
-        <a href="login.html" class="nav-btn login-btn">
-            <span class="btn-icon">👤</span>
-            <span class="btn-text">Character Creation</span>
-        </a>
-        <a href="lore.html" class="nav-btn lore-btn">
-            <span class="btn-icon">📚</span>
-            <span class="btn-text">Lore</span>
-        </a>
-    </div>
 
     <!-- Faction Overview -->
     <div class="faction-detail-container">
@@ -417,6 +440,49 @@
 
     <script>
         // Add any interactive functionality here if needed
+        
+        // Account menu functionality
+        (function(){
+            const accountBtn = document.getElementById('accountBtn');
+            const accountMenu = document.getElementById('accountMenu');
+            const accountLabel = document.getElementById('accountLabel');
+            const accountAction = document.getElementById('accountAction');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            function isLoggedIn() {
+                try { return !!JSON.parse(localStorage.getItem('currentUser') || 'null'); } catch { return false; }
+            }
+
+            function syncAccountUI() {
+                if (isLoggedIn()) {
+                    accountLabel.textContent = 'Account';
+                    accountAction.style.display = 'block';
+                    logoutBtn.style.display = 'block';
+                } else {
+                    accountLabel.textContent = 'Account';
+                    accountAction.style.display = 'none';
+                    logoutBtn.style.display = 'none';
+                }
+            }
+
+            accountBtn.addEventListener('click', () => {
+                const open = accountMenu.classList.toggle('show');
+                accountMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+            });
+            document.addEventListener('click', (e) => {
+                if (!accountMenu.contains(e.target) && e.target !== accountBtn) {
+                    accountMenu.classList.remove('show');
+                    accountMenu.setAttribute('aria-hidden', 'true');
+                }
+            });
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                accountMenu.classList.remove('show');
+                syncAccountUI();
+                window.location.href = 'homepage.html';
+            });
+            syncAccountUI();
+        })();
     </script>
 
 </body>

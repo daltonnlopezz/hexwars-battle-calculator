@@ -1,1 +1,205 @@
-### Create a homepage for the HEX Wars website ###
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HEX Wars — Home</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="homepage.html" aria-label="HEX Wars Home">
+                <img src="static/images/logo.jpg" alt="HEX Wars Logo">
+                <span class="brand-name">HEX Wars</span>
+            </a>
+            <nav class="topnav-center">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="lore.html">Lore ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="lore.html">All Lore</a>
+                        <a href="factions.html">Factions</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="tools.html">Game Tools ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="factions.html">Factions</a>
+                        <a href="index.html">Battle Calculator</a>
+                        <a href="resources.html">Resource Calculator</a>
+                    </div>
+                </div>
+            </nav>
+            <div class="nav-right">
+                <a class="nav-link" href="shop.html">🛒 Shop</a>
+                <div class="dropdown">
+                    <a class="nav-link dropdown-trigger" href="about.html">About ▾</a>
+                    <div class="dropdown-menu">
+                        <a href="about.html">About HEX Wars</a>
+                        <a href="updates.html">Updates</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <button id="accountBtn" class="account-btn dropdown-trigger">👤 <span id="accountLabel">Account</span> ▾</button>
+                    <div id="accountMenu" class="account-menu dropdown-menu" aria-hidden="true">
+                        <a href="login.html">Login</a>
+                        <a href="register.html">Sign Up</a>
+                        <a href="#">Support</a>
+                        <a href="#">Account Settings</a>
+                        <a id="accountAction" href="character-selection.html" style="display:none;">Account Home</a>
+                        <button id="logoutBtn" style="display:none;">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Logo -->
+    <div class="logo-container">
+        <img src="static/images/logo.jpg" alt="HEX Wars Logo" class="logo-image" />
+    </div>
+
+    <h1>HEX WARS</h1>
+
+    <!-- Overview Card -->
+    <div class="faction-card intro" style="border-color:#ffd700;">
+        <div class="faction-title" style="color:#ffd700;">Welcome to HEX Wars</div>
+        <div class="faction-desc">
+            HEX Wars is a growing universe—stories, games, and systems evolving together. I’m building an interconnected
+            world of factions, characters, and conflicts across multiple formats: tabletop/board games, online tools,
+            and web experiences. This hub introduces the universe, links to playable tools, and tracks progress across
+            lore, game design, and programming.
+        </div>
+        <div class="faction-section-title" style="color:#ffd700;">Explore the Universe</div>
+        <ul class="passive-list">
+            <li><strong>Lore</strong> — Read stories, world history, and faction myths.</li>
+            <li><strong>Games</strong> — Board game rulesets, online versions, and character creation.</li>
+            <li><strong>Programming</strong> — Battle/Resource calculators and site updates.</li>
+        </ul>
+    </div>
+
+    <!-- Organized Updates: Lore / Games / Programming -->
+    <div class="calculator-container" style="grid-template-columns: 1fr 1fr;">
+        <!-- Lore -->
+        <div class="army-card terrain-card">
+            <div class="card-header terrain-header">
+                <span class="header-icon">📚</span>
+                <h2>Lore</h2>
+            </div>
+            <div class="card-content">
+                <div class="faction-section-title">Roadmap</div>
+                <ul class="strategy-list">
+                    <li>Foundational world timeline and key eras.</li>
+                    <li>Faction origin stories and cultural notes.</li>
+                    <li>Short stories and character spotlights.</li>
+                </ul>
+                <div class="faction-section-title">Latest Additions</div>
+                <ul class="strategy-list">
+                    <li>Faction pages scaffolded and themed.</li>
+                    <li>Lore landing with epic hero section.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Games -->
+        <div class="army-card attacker-card">
+            <div class="card-header attacker-header">
+                <span class="header-icon">🎲</span>
+                <h2>Games</h2>
+            </div>
+            <div class="card-content">
+                <div class="faction-section-title">Roadmap</div>
+                <ul class="strategy-list">
+                    <li>Board game core rules and scenarios.</li>
+                    <li>Online battle sandbox and faction builder.</li>
+                    <li>Character creation and inventory systems.</li>
+                </ul>
+                <div class="faction-section-title">Latest Additions</div>
+                <ul class="strategy-list">
+                    <li>Faction detail references for unit stats.</li>
+                    <li>Battle results visualization polish.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Programming -->
+        <div class="army-card defender-card">
+            <div class="card-header defender-header">
+                <span class="header-icon">🛠️</span>
+                <h2>Programming</h2>
+            </div>
+            <div class="card-content">
+                <div class="faction-section-title">Roadmap</div>
+                <ul class="strategy-list">
+                    <li>Battle Calculator API integration and testing.</li>
+                    <li>Resource Calculator and kingdom systems.</li>
+                    <li>Unified UI components and accessibility passes.</li>
+                </ul>
+                <div class="faction-section-title">Latest Additions</div>
+                <ul class="strategy-list">
+                    <li>Top-right navigation panel and overlay.</li>
+                    <li>Responsive cards and themed headers.</li>
+                    <li>Improved notifications and modal styles.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Social Connections -->
+    <div class="faction-card" style="border-color:#444;">
+        <div class="card-header" style="border-bottom-color:#333;">
+            <span class="header-icon">🌐</span>
+            <h2>Connect</h2>
+        </div>
+        <div class="card-content">
+            <ul class="strategy-list" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:12px;">
+                <li><a href="#" style="color:#ffd700; text-decoration:none;">📸 Instagram — Follow art and teasers</a></li>
+                <li><a href="#" style="color:#87CEEB; text-decoration:none;">💬 Discord — Join discussions and playtests</a></li>
+                <li><a href="#" style="color:#90EE90; text-decoration:none;">🧵 Threads/Twitter — Development notes</a></li>
+                <li><a href="#" style="color:#ffb347; text-decoration:none;">📺 YouTube — Demos and dev logs</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        (function(){
+            const accountBtn = document.getElementById('accountBtn');
+            const accountMenu = document.getElementById('accountMenu');
+            const accountLabel = document.getElementById('accountLabel');
+            const accountAction = document.getElementById('accountAction');
+            const logoutBtn = document.getElementById('logoutBtn');
+
+            function isLoggedIn() {
+                try {
+                    const user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+                    return !!user;
+                } catch { return false; }
+            }
+
+            function syncAccountUI() {
+                if (isLoggedIn()) {
+                    accountLabel.textContent = 'Account';
+                    accountAction.style.display = 'block';
+                    logoutBtn.style.display = 'block';
+                } else {
+                    accountLabel.textContent = 'Account';
+                    accountAction.style.display = 'none';
+                    logoutBtn.style.display = 'none';
+                }
+            }
+
+            // Account dropdown now works with hover like other dropdowns
+            // No need for click handlers since it uses CSS hover
+
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('currentUser');
+                syncAccountUI();
+                window.location.href = 'homepage.html';
+            });
+
+            syncAccountUI();
+        })();
+    </script>
+</body>
+</html>
